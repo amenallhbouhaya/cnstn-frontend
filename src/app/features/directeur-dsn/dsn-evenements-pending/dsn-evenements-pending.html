@@ -1,0 +1,101 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Validation Directeur DSN</h2>
+      <p class="page-subtitle">Evénements en attente de décision finale.</p>
+    </div>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/directeur-dsn/evenements/new">Créer événement</a>
+      <button class="btn btn-outline" type="button" (click)="load()">Rafraîchir</button>
+    </div>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="alert" *ngIf="docMsg">{{ docMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Type</th>
+          <th>Salle</th>
+          <th>Equipements</th>
+          <th>Demandeur</th>
+          <th class="actions">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let e of items">
+          <tr>
+            <td class="title">
+              <div class="title-line">{{ e.titre }}</div>
+              <div class="badge">{{ e.statut }}</div>
+            </td>
+
+            <td>{{ e.dateDebut | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.dateFin | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.typeEvenement }}</td>
+
+            <td>
+              {{ e.salleNom ? (e.salleNom + ' (' + e.salleCapacite + ')') : '-' }}
+            </td>
+
+            <td class="wrap">
+              {{ e.equipements.length ? e.equipements.join(', ') : '-' }}
+            </td>
+
+            <td>{{ e.demandeurEmail ?? '-' }}</td>
+
+            <td class="actions">
+              <div class="action-buttons">
+                <button type="button" class="btn btn-small" (click)="accept(e.id)">Accept</button>
+                <button type="button" class="btn btn-small btn-danger" (click)="openReject(e.id)">Reject</button>
+                <button type="button" class="btn btn-small" (click)="openDoc(e.id)">Envoyer document</button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="reject-row" [class.open]="rejectOpen[e.id]" *ngIf="rejectOpen[e.id]">
+            <td colspan="8">
+              <div class="reject-box">
+                <div class="label">Motif du refus</div>
+                <input class="input" [(ngModel)]="rejectComment[e.id]" placeholder="Ex: Non prioritaire..." />
+
+                <div class="reject-actions">
+                  <button type="button" class="btn btn-small btn-danger" (click)="confirmReject(e.id)">Confirmer refus</button>
+                  <button type="button" class="btn btn-small btn-outline" (click)="cancelReject(e.id)">Annuler</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="docOpen[e.id]">
+            <td colspan="8">
+              <div class="reject-box">
+                <div class="label">Titre du document</div>
+                <input class="input" [(ngModel)]="docTitle[e.id]" placeholder="Ex: Décision DSN" />
+
+                <div class="label" style="margin-top:10px;">Fichier</div>
+                <input type="file" (change)="onFileSelected(e.id, $event)" />
+
+                <div style="margin-top:10px;">
+                  <button class="btn btn-small btn-primary" type="button" (click)="sendDoc(e.id)">Envoyer</button>
+                  <button class="btn btn-small btn-outline" type="button" (click)="cancelDoc(e.id)">Annuler</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="8" class="empty">Aucun événement en attente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

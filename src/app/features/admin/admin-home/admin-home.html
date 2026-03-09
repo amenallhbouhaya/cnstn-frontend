@@ -1,0 +1,218 @@
+<div class="dashboard">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Vue d'ensemble de votre système</p>
+  </div>
+
+  <!-- Loading / Error -->
+  <div class="stats-loading" *ngIf="loadingStats">
+    <div class="spinner"></div>
+    <span>Chargement des statistiques…</span>
+  </div>
+  <div class="stats-error" *ngIf="statsError">{{ statsError }}</div>
+
+  <ng-container *ngIf="stats && !loadingStats">
+
+    <!-- ═══  ÉVÉNEMENTS  (Blue)  ═══ -->
+    <section class="section section--events">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon section-icon--events">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Événements</h2>
+            <p class="section-sub">Suivi des réservations et événements</p>
+          </div>
+        </div>
+        <a class="section-link section-link--events" routerLink="/admin/evenements">Voir tout &rarr;</a>
+      </div>
+
+      <!-- Stat cards row -->
+      <div class="cards-row">
+        <div class="kpi-card kpi-card--events-total">
+          <div class="kpi-number">{{ stats.evenementsTotal }}</div>
+          <div class="kpi-label">Total</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--events" style="width:100%"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--events-ok">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--ok"></span>
+            <span class="kpi-label">Approuvés</span>
+          </div>
+          <div class="kpi-number">{{ stats.evenementsApprouves }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--events-ok" [style.width.%]="stats.evenementsTotal ? (stats.evenementsApprouves / stats.evenementsTotal * 100) : 0"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--events-wait">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--wait"></span>
+            <span class="kpi-label">En attente</span>
+          </div>
+          <div class="kpi-number">{{ stats.evenementsEnAttente }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--events-wait" [style.width.%]="stats.evenementsTotal ? (stats.evenementsEnAttente / stats.evenementsTotal * 100) : 0"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--events-ref">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--ref"></span>
+            <span class="kpi-label">Refusés</span>
+          </div>
+          <div class="kpi-number">{{ stats.evenementsRefuses }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--events-ref" [style.width.%]="stats.evenementsTotal ? (stats.evenementsRefuses / stats.evenementsTotal * 100) : 0"></div></div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-wrap">
+        <div class="chart-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Répartition par statut
+        </div>
+        <div class="chart-area">
+          <canvas baseChart [data]="eventsChartData" [options]="eventsChartOptions" type="bar"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══  SALLES  (Green)  ═══ -->
+    <section class="section section--salles">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon section-icon--salles">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Salles</h2>
+            <p class="section-sub">Disponibilité et occupation</p>
+          </div>
+        </div>
+        <a class="section-link section-link--salles" routerLink="/admin/salles">Voir tout &rarr;</a>
+      </div>
+
+      <div class="cards-row">
+        <div class="kpi-card kpi-card--salles-total">
+          <div class="kpi-number">{{ stats.sallesTotal }}</div>
+          <div class="kpi-label">Total</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--salles" style="width:100%"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--salles-ok">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--salles-ok"></span>
+            <span class="kpi-label">Disponibles</span>
+          </div>
+          <div class="kpi-number">{{ stats.sallesDisponibles }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--salles-ok" [style.width.%]="stats.sallesTotal ? (stats.sallesDisponibles / stats.sallesTotal * 100) : 0"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--salles-busy">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--salles-busy"></span>
+            <span class="kpi-label">Occupées</span>
+          </div>
+          <div class="kpi-number">{{ stats.sallesOccupees }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--salles-busy" [style.width.%]="stats.sallesTotal ? (stats.sallesOccupees / stats.sallesTotal * 100) : 0"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+          Taux d'occupation
+        </div>
+        <div class="chart-area chart-area--doughnut">
+          <canvas baseChart [data]="sallesChartData" [options]="sallesChartOptions" type="doughnut"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══  INTERVENTIONS  (Orange)  ═══ -->
+    <section class="section section--interventions">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon section-icon--interventions">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Interventions</h2>
+            <p class="section-sub">Demandes de maintenance et réparation</p>
+          </div>
+        </div>
+        <a class="section-link section-link--interventions" routerLink="/admin/equipements">Voir tout &rarr;</a>
+      </div>
+
+      <div class="cards-row">
+        <div class="kpi-card kpi-card--interv-total">
+          <div class="kpi-number">{{ stats.interventionsTotal }}</div>
+          <div class="kpi-label">Total</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--interv" style="width:100%"></div></div>
+        </div>
+        <div class="kpi-card kpi-card--interv-wait">
+          <div class="kpi-header">
+            <span class="kpi-dot kpi-dot--interv-wait"></span>
+            <span class="kpi-label">En attente</span>
+          </div>
+          <div class="kpi-number">{{ stats.interventionsEnAttente }}</div>
+          <div class="kpi-bar"><div class="kpi-bar-fill kpi-bar-fill--interv-wait" [style.width.%]="stats.interventionsTotal ? (stats.interventionsEnAttente / stats.interventionsTotal * 100) : 0"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+          Répartition des interventions
+        </div>
+        <div class="chart-area chart-area--doughnut">
+          <canvas baseChart [data]="interventionsChartData" [options]="interventionsChartOptions" type="doughnut"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══  RÉCAPITULATIF TABLE  ═══ -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+        <span>Récapitulatif général</span>
+      </div>
+      <div class="table-card-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Catégorie</th>
+              <th>Total</th>
+              <th>Statut positif</th>
+              <th>Statut négatif / attente</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cat-dot cat-dot--events"></span><strong>Événements</strong></td>
+              <td class="td-num">{{ stats.evenementsTotal }}</td>
+              <td><span class="badge badge--events-ok">{{ stats.evenementsApprouves }} approuvés</span></td>
+              <td>
+                <span class="badge badge--events-wait">{{ stats.evenementsEnAttente }} en attente</span>
+                <span class="badge badge--events-ref" style="margin-left:6px">{{ stats.evenementsRefuses }} refusés</span>
+              </td>
+              <td><a routerLink="/admin/evenements" class="table-btn table-btn--events">Gérer</a></td>
+            </tr>
+            <tr>
+              <td><span class="cat-dot cat-dot--salles"></span><strong>Salles</strong></td>
+              <td class="td-num">{{ stats.sallesTotal }}</td>
+              <td><span class="badge badge--salles-ok">{{ stats.sallesDisponibles }} disponibles</span></td>
+              <td><span class="badge badge--salles-busy">{{ stats.sallesOccupees }} occupées</span></td>
+              <td><a routerLink="/admin/salles" class="table-btn table-btn--salles">Gérer</a></td>
+            </tr>
+            <tr>
+              <td><span class="cat-dot cat-dot--interv"></span><strong>Interventions</strong></td>
+              <td class="td-num">{{ stats.interventionsTotal }}</td>
+              <td>—</td>
+              <td><span class="badge badge--interv-wait">{{ stats.interventionsEnAttente }} en attente</span></td>
+              <td><a routerLink="/admin/equipements" class="table-btn table-btn--interv">Gérer</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

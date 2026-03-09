@@ -1,0 +1,52 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <img class="auth-logo" src="cnstn-logo.png" alt="CNSTN">
+      <h2 class="auth-title">Gestion des Services</h2>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn--primary" type="button" (click)="newItem()">+ Nouveau service</button>
+    </div>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-row">
+        <div class="label">Nom</div>
+        <input class="input" formControlName="nom">
+      </div>
+
+      <button class="btn btn--primary" type="submit">
+        {{ editingId === null ? 'Ajouter' : 'Enregistrer' }}
+      </button>
+
+      <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+
+    <hr class="divider" />
+
+    <p class="loading" *ngIf="loading">Chargement...</p>
+
+    <div class="table-wrap" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of items">
+            <td>{{ s.nom }}</td>
+            <td class="actions">
+              <div class="actions-group">
+                <button class="btn" type="button" (click)="edit(s)">Edit</button>
+                <button class="btn btn--danger" type="button" (click)="remove(s.id)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="emp-page">
+  <div class="emp-header">
+    <div>
+      <h1 class="emp-title">Notifications</h1>
+      <p class="emp-subtitle">Suivez les mises à jour de vos événements et actions</p>
+    </div>
+    <button class="btn btn--outline" type="button" (click)="markAllAsRead()">Marquer tout comme lu</button>
+  </div>
+
+  <div class="alert alert--error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="emp-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Chargement…</span>
+  </div>
+
+  <div class="card" *ngIf="!loading">
+    <div class="notif-list" *ngIf="items.length > 0">
+      <button
+        class="notif-item"
+        type="button"
+        *ngFor="let n of items"
+        [class.notif-item--unread]="!n.lu"
+        (click)="open(n)">
+        <div class="notif-main">
+          <div class="notif-message">{{ n.message }}</div>
+          <div class="notif-meta">{{ n.dateCreation | date:'dd/MM/yyyy HH:mm' }}</div>
+        </div>
+        <span class="notif-state" *ngIf="!n.lu">Nouveau</span>
+      </button>
+    </div>
+
+    <div class="empty-state" *ngIf="items.length === 0">
+      <p>Aucune notification pour le moment.</p>
+    </div>
+  </div>
+</div>

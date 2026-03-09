@@ -1,0 +1,52 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Comptes en attente</h2>
+      <p class="page-subtitle">Validez les nouvelles demandes d'inscription avant création du compte.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-outline" type="button" (click)="load()">Rafraîchir</button>
+    </div>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="ok" *ngIf="successMsg">{{ successMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Matricule</th>
+          <th>Téléphone</th>
+          <th>Demande le</th>
+          <th class="actions">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let u of items">
+          <td>{{ u.nom }}</td>
+          <td>{{ u.prenom }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.matricule }}</td>
+          <td>{{ u.telephone }}</td>
+          <td>{{ u.dateCreation | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td class="actions">
+            <div class="action-buttons">
+              <button type="button" class="btn btn-small" (click)="accept(u.id)">Accepter</button>
+              <button type="button" class="btn btn-small btn-danger" (click)="reject(u.id)">Refuser</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="7" class="empty">Aucune demande en attente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

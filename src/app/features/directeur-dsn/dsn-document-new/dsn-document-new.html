@@ -1,0 +1,37 @@
+<div class="doc-page">
+  <div class="doc-header">
+    <div>
+      <h1 class="doc-title">Créer un document</h1>
+      <p class="doc-subtitle">Envoyer un document à tous les employés</p>
+    </div>
+    <a class="btn btn-outline" routerLink="/directeur-dsn/evenements">Événements en attente</a>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="alert alert-success" *ngIf="msg">{{ msg }}</p>
+
+  <div class="card form-card">
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="label">Titre du document *</label>
+        <input class="input" formControlName="titre" placeholder="Ex: Décision DSN" />
+      </div>
+
+      <div class="field">
+        <label class="label">Niveau accès (optionnel)</label>
+        <input class="input" formControlName="niveauAcces" placeholder="Ex: Interne" />
+      </div>
+
+      <div class="field">
+        <label class="label">Fichier *</label>
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" [disabled]="loadingSend">
+          {{ loadingSend ? 'Envoi...' : 'Envoyer document' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

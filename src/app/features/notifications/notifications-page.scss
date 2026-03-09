@@ -1,0 +1,45 @@
+@use '../employe/employe-shared' as *;
+@include emp-base;
+
+.notif-list {
+  display: grid;
+}
+
+.notif-item {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+  text-align: left;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.notif-item:last-child {
+  border-bottom: 0;
+}
+
+.notif-item--unread {
+  background: var(--primary-light);
+}
+
+.notif-message {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.notif-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.notif-state {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-green);
+}

@@ -1,0 +1,90 @@
+/* ─────────────────────────────────────────────
+   EMPLOYE  HOME  –  Quick-access dashboard
+   ───────────────────────────────────────────── */
+
+:host { display: block; }
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.home-header {
+  h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+}
+
+/* ── Quick cards ── */
+.quick-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.qcard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(27, 42, 107, .04);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s, box-shadow .15s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(27, 42, 107, .1);
+  }
+}
+
+.qcard-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.qcard-icon--green  { background: rgba(46, 125, 50, .1);  color: #2e7d32; }
+.qcard-icon--blue   { background: rgba(21, 101, 192, .1); color: #1565c0; }
+.qcard-icon--orange { background: rgba(230, 81, 0, .1);   color: #e65100; }
+.qcard-icon--purple { background: rgba(106, 27, 154, .1); color: #6a1b9a; }
+.qcard-icon--teal   { background: rgba(0, 131, 143, .1);  color: #00838f; }
+.qcard-icon--gray   { background: rgba(66, 66, 66, .08);  color: #424242; }
+
+.qcard-body {
+  h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 768px) {
+  .quick-cards {
+    grid-template-columns: 1fr;
+  }
+}

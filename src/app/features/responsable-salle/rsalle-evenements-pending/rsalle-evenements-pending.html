@@ -1,0 +1,82 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Validation Responsable Salle</h2>
+      <p class="page-subtitle">Evénements en attente de validation (Salle).</p>
+    </div>
+    <div class="page-actions">
+      <a class="btn btn-primary" routerLink="/responsable-salle/evenements/new">Créer événement</a>
+      <button class="btn btn-outline" type="button" (click)="load()">Rafraîchir</button>
+    </div>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Type</th>
+          <th>Salle</th>
+          <th>Equipements</th>
+          <th>Demandeur</th>
+          <th class="actions">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let e of items">
+          <tr>
+            <td class="title">
+              <div class="title-line">{{ e.titre }}</div>
+              <div class="badge">{{ e.statut }}</div>
+            </td>
+
+            <td>{{ e.dateDebut | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.dateFin | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.typeEvenement }}</td>
+
+            <td>
+              {{ e.salleNom ? (e.salleNom + ' (' + e.salleCapacite + ')') : '-' }}
+            </td>
+
+            <td class="wrap">
+              {{ e.equipements.length ? e.equipements.join(', ') : '-' }}
+            </td>
+
+            <td>{{ e.demandeurEmail ?? '-' }}</td>
+
+            <td class="actions">
+              <div class="action-buttons">
+                <button type="button" class="btn btn-small" (click)="accept(e.id)">Accept</button>
+                <button type="button" class="btn btn-small btn-danger" (click)="openReject(e.id)">Reject</button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="reject-row" [class.open]="rejectOpen[e.id]" *ngIf="rejectOpen[e.id]">
+            <td colspan="8">
+              <div class="reject-box">
+                <div class="label">Motif du refus</div>
+                <input class="input" [(ngModel)]="rejectComment[e.id]" placeholder="Ex: Salle non disponible..." />
+
+                <div class="reject-actions">
+                  <button type="button" class="btn btn-small btn-danger" (click)="confirmReject(e.id)">Confirmer refus</button>
+                  <button type="button" class="btn btn-small btn-outline" (click)="cancelReject(e.id)">Annuler</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="8" class="empty">Aucun événement en attente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

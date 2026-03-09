@@ -1,0 +1,123 @@
+<div class="emp-page">
+  <div class="emp-header">
+    <div>
+      <h1 class="emp-title">Créer un événement</h1>
+      <p class="emp-subtitle">Choisissez une date depuis le calendrier et créez votre événement</p>
+    </div>
+    <a class="btn btn--outline" [routerLink]="backLink">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      {{ backLabel }}
+    </a>
+  </div>
+
+  <div class="alert alert--success" *ngIf="msg">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    {{ msg }}
+  </div>
+  <div class="alert alert--error" *ngIf="errorMsg">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    {{ errorMsg }}
+  </div>
+
+  <div class="calendar-card">
+    <full-calendar *ngIf="isBrowser" [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <div class="event-modal" *ngIf="isEditorOpen">
+    <div class="event-modal__backdrop" (click)="closeEditor()"></div>
+
+    <aside class="event-panel">
+      <div class="event-panel__header">
+        <div>
+          <h2>Nouvel événement</h2>
+          <p>{{ selectedDate }}</p>
+        </div>
+        <button class="btn btn--outline btn--sm" type="button" (click)="closeEditor()">Fermer</button>
+      </div>
+
+      <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-row-2">
+          <div class="field">
+            <label class="field__label">Titre *</label>
+            <input class="field__input" formControlName="titre" placeholder="Titre de l'événement">
+          </div>
+          <div class="field">
+            <label class="field__label">Nom (optionnel)</label>
+            <input class="field__input" formControlName="nom" placeholder="Nom court">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Description</label>
+          <textarea class="field__input field__input--textarea" formControlName="description" placeholder="Décrivez l'événement..."></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="field">
+            <label class="field__label">Heure début *</label>
+            <select class="field__input" formControlName="startTime">
+              <option value="">-- Choisir l'heure --</option>
+              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label">Heure fin *</label>
+            <select class="field__input" formControlName="endTime">
+              <option value="">-- Choisir l'heure --</option>
+              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Type *</label>
+          <select class="field__input" formControlName="typeEvenement">
+            <option [ngValue]="null">-- Choisir un type --</option>
+            <option *ngFor="let option of eventTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+
+        <div class="field" *ngIf="showSalleField">
+          <label class="field__label">Salle disponible *</label>
+          <select class="field__input" formControlName="salleId">
+            <option [ngValue]="null">-- Choisir une salle --</option>
+            <option *ngFor="let s of salles" [ngValue]="s.id">{{ s.nom }} ({{ s.capacite }} places)</option>
+          </select>
+          <small class="hint" *ngIf="!form.controls.startTime.value || !form.controls.endTime.value">
+            Choisissez d'abord l'heure début et fin pour charger les salles disponibles.
+          </small>
+          <small class="hint" *ngIf="noSallesAvailable">Aucune salle disponible sur ce créneau.</small>
+        </div>
+
+        <div class="field" *ngIf="showOnlineLinkField">
+          <label class="field__label">Lien en ligne *</label>
+          <input class="field__input" formControlName="onlineLink" placeholder="https://...">
+        </div>
+
+        <div class="field" *ngIf="showEquipementsField">
+          <label class="field__label">Équipements disponibles</label>
+          <div class="checkbox-grid">
+            <label *ngFor="let e of equipements" class="checkbox-label" [class.checkbox-label--unavailable]="!e.available">
+              <input
+                type="checkbox"
+                [checked]="selectedEquipIds.has(e.id)"
+                [disabled]="!e.available"
+                (change)="toggleEquip(e, $any($event.target).checked)">
+              <span>
+                {{ e.typeEquipement }} — {{ e.etat }}
+                <em *ngIf="!e.available" class="badge-reserved">Déjà réservé sur ce créneau</em>
+              </span>
+            </label>
+          </div>
+          <small class="hint" *ngIf="equipementWarnMsg">{{ equipementWarnMsg }}</small>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" type="submit" [disabled]="loading">
+            {{ loading ? 'Création...' : 'Créer l\'événement' }}
+          </button>
+        </div>
+      </form>
+    </aside>
+  </div>
+</div>

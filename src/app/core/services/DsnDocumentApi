@@ -1,0 +1,20 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class DsnDocumentApi {
+  constructor(private http: HttpClient) {}
+
+  sendToDemandeur(eventId: number, file: File, titre: string, niveauAcces?: string) {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('titre', titre);
+    if (niveauAcces) fd.append('niveauAcces', niveauAcces);
+
+    return this.http.post(
+      `${environment.apiUrl}/api/directeur-dsn/documents/send-to-demandeur/${eventId}`,
+      fd
+    );
+  }
+}

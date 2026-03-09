@@ -1,0 +1,33 @@
+<div class="card">
+  <h2 style="margin-top:0;">Agenda des événements</h2>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p *ngIf="loading">Chargement...</p>
+
+  <table *ngIf="!loading" style="width:100%; border-collapse: collapse; margin-top:12px;">
+    <thead>
+      <tr>
+        <th align="left">Titre</th>
+        <th align="left">Début</th>
+        <th align="left">Fin</th>
+        <th align="left">Salle(s)</th>
+        <th align="left">Equipements</th>
+        <th align="left">Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of items">
+        <td>{{ e.titre }}</td>
+        <td>{{ e.dateDebut | date:'yyyy-MM-dd HH:mm' }}</td>
+        <td>{{ e.dateFin | date:'yyyy-MM-dd HH:mm' }}</td>
+        <td>{{ e.salles.join(', ') }}</td>
+        <td>{{ e.equipements.join(', ') }}</td>
+        <td>{{ e.statut }}</td>
+      </tr>
+
+      <tr *ngIf="items.length === 0">
+        <td colspan="6">Aucun événement.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

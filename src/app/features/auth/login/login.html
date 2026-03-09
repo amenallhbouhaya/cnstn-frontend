@@ -1,0 +1,39 @@
+<div class="auth-split">
+  <!-- Left panel -->
+  <div class="auth-brand">
+    <div class="brand-content">
+      <img class="brand-logo" src="cnstn-logo.png" alt="CNSTN">
+      <h1 class="brand-name">CNSTN</h1>
+      <p class="brand-tagline">Centre National des Sciences et Technologies Nucléaires</p>
+    </div>
+    <div class="brand-decor"></div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="auth-panel">
+    <div class="auth-card">
+      <h2 class="auth-title">Connexion</h2>
+      <p class="auth-subtitle">Connectez-vous pour accéder à votre espace.</p>
+
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-row">
+          <label class="label" for="email">Email</label>
+          <input class="input" id="email" type="email" formControlName="email" placeholder="ex: test&#64;mail.com">
+        </div>
+
+        <div class="form-row">
+          <label class="label" for="password">Mot de passe</label>
+          <input class="input" id="password" type="password" formControlName="password" placeholder="••••••••">
+        </div>
+
+        <button class="btn" type="submit">Se connecter</button>
+
+        <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+      </form>
+
+      <div class="auth-footer">
+        Pas de compte ? <a class="link" routerLink="/register">Créer un compte</a>
+      </div>
+    </div>
+  </div>
+</div>

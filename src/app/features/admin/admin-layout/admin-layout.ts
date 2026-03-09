@@ -1,0 +1,21 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../../core/services/auth';
+
+@Component({
+  selector: 'app-admin-layout',
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  templateUrl: './admin-layout.html',
+  styleUrl: './admin-layout.scss'
+})
+export class AdminLayoutComponent {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+}
