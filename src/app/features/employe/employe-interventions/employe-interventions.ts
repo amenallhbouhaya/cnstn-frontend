@@ -36,4 +36,31 @@ export class EmployeInterventionsComponent {
         }
       });
   }
+
+  statusLabel(status?: string | null) {
+    switch (status) {
+      case 'EN_ATTENTE_CHEF':
+        return 'En attente chef';
+      case 'EN_ATTENTE_DSN':
+        return 'En attente DSN';
+      case 'EN_COURS':
+        return 'En cours';
+      case 'REPARE':
+        return 'Repare';
+      case 'CASSE':
+        return 'Casse';
+      case 'REFUSEE_CHEF':
+        return 'Refusee chef';
+      default:
+        return status || '-';
+    }
+  }
+
+  isBlockingStatus(status?: string | null) {
+    return status === 'EN_ATTENTE_CHEF' || status === 'EN_ATTENTE_DSN' || status === 'EN_COURS' || status === 'CASSE';
+  }
+
+  isRepared(status?: string | null) {
+    return status === 'REPARE';
+  }
 }

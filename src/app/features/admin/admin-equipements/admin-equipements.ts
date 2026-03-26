@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 import { EquipementService } from '../../../core/services/equipement';
 import { Equipement } from '../../../core/models/equipement';
-import { TypeEquipement } from '../../../core/models/type-equipement';
 
 @Component({
   selector: 'app-admin-equipements',
@@ -23,13 +22,9 @@ export class AdminEquipementsComponent {
   errorMsg = '';
   editingId: number | null = null;
 
-  typeValues = Object.values(TypeEquipement);
-
   form = this.fb.group({
-    dateAquisation: ['', Validators.required], // input date => yyyy-mm-dd
-    etat: ['', Validators.required],
-    reservable: [true, Validators.required],
-    typeEquipement: [null as any, Validators.required],
+    nom: ['', Validators.required],
+    numeroSerie: ['', Validators.required]
   });
 
   private platformId = inject(PLATFORM_ID);
@@ -61,26 +56,17 @@ export class AdminEquipementsComponent {
   newItem() {
     this.editingId = null;
     this.form.reset({
-      dateAquisation: '',
-      etat: '',
-      reservable: true,
-      typeEquipement: null
+      nom: '',
+      numeroSerie: ''
     });
   }
 
   edit(e: Equipement) {
     this.editingId = e.id ?? null;
 
-    // تحويل ISO -> yyyy-mm-dd
-    const yyyyMmDd = e.dateAquisation
-      ? new Date(e.dateAquisation).toISOString().slice(0, 10)
-      : '';
-
     this.form.setValue({
-      dateAquisation: yyyyMmDd,
-      etat: e.etat ?? '',
-      reservable: !!e.reservable,
-      typeEquipement: e.typeEquipement ?? null
+      nom: e.nom ?? '',
+      numeroSerie: e.numeroSerie ?? ''
     });
   }
 
@@ -90,10 +76,8 @@ export class AdminEquipementsComponent {
     const raw = this.form.value as any;
 
     const payload: Equipement = {
-      dateAquisation: new Date(raw.dateAquisation).toISOString(),
-      etat: raw.etat,
-      reservable: !!raw.reservable,
-      typeEquipement: raw.typeEquipement
+      nom: raw.nom,
+      numeroSerie: raw.numeroSerie
     };
 
     if (this.editingId === null) {

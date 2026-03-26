@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Stock en panne</h2>
+      <p class="page-subtitle">Pieces cassees retirees du stock</p>
+    </div>
+    <button class="btn btn-outline" type="button" (click)="load()">Rafraichir</button>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Piece</th>
+          <th>Date ajout</th>
+          <th>Demandeur</th>
+          <th>Telephone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of items">
+          <td>{{ i.nomPiece || '-' }}</td>
+          <td>{{ i.dateAjout | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ i.demandeurNom || '-' }}</td>
+          <td>{{ i.demandeurTelephone || '-' }}</td>
+        </tr>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="4" class="empty">Aucune piece.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

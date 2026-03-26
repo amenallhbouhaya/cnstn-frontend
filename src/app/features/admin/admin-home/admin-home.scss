@@ -20,7 +20,7 @@ $int-wait:  #f5a63c;
 .dashboard {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 14px;
 }
 
 /* ── Page header ── */
@@ -88,7 +88,7 @@ $int-wait:  #f5a63c;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--border);
 }
 .section-head-left {
@@ -97,8 +97,8 @@ $int-wait:  #f5a63c;
   gap: 14px;
 }
 .section-icon {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 12px;
   display: grid;
   place-items: center;
@@ -110,17 +110,17 @@ $int-wait:  #f5a63c;
 
 .section-title {
   margin: 0;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text);
 }
 .section-sub {
   margin: 2px 0 0;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
 }
 .section-link {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: opacity .15s;
@@ -130,23 +130,30 @@ $int-wait:  #f5a63c;
 .section-link--salles        { color: $sal; }
 .section-link--interventions { color: $int; }
 
+/* ---- Section body ---- */
+.section-body {
+  display: grid;
+  gap: 10px;
+  padding: 10px 14px 12px;
+}
+
 /* ---- KPI cards row ---- */
 .cards-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 0;
+  border-bottom: none;
 }
 
 .kpi-card {
   background: #fafbfe;
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px 18px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
 }
 
 .kpi-header {
@@ -169,7 +176,7 @@ $int-wait:  #f5a63c;
 .kpi-dot--interv-wait { background: $int-wait; }
 
 .kpi-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .05em;
@@ -177,10 +184,15 @@ $int-wait:  #f5a63c;
 }
 
 .kpi-number {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
   line-height: 1;
   color: var(--text);
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--muted);
 }
 
 /* Progress bar */
@@ -214,26 +226,26 @@ $int-wait:  #f5a63c;
 
 /* ---- Chart ---- */
 .chart-wrap {
-  padding: 18px 22px 22px;
+  padding: 0;
 }
 
 .chart-label {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--muted);
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: .03em;
 }
 
 .chart-area {
-  height: 240px;
+  height: 150px;
 }
 .chart-area--doughnut {
-  height: 220px;
+  height: 150px;
   max-width: 360px;
   margin: 0 auto;
 }
@@ -252,8 +264,8 @@ $int-wait:  #f5a63c;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 16px 22px;
-  font-size: 15px;
+  padding: 10px 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text);
   border-bottom: 1px solid var(--border);
@@ -266,10 +278,10 @@ $int-wait:  #f5a63c;
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
 
   th, td {
-    padding: 14px 22px;
+    padding: 8px 14px;
     text-align: left;
     white-space: nowrap;
   }
@@ -278,7 +290,7 @@ $int-wait:  #f5a63c;
     background: #f8f9fc;
     color: var(--muted);
     font-weight: 700;
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: .05em;
     border-bottom: 2px solid var(--border);
@@ -296,7 +308,18 @@ $int-wait:  #f5a63c;
 
 .td-num {
   font-weight: 800;
-  font-size: 16px;
+  font-size: 14px;
+}
+
+.badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 /* Category dot */
@@ -315,9 +338,9 @@ $int-wait:  #f5a63c;
 /* Badges */
 .badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 50px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 .badge--events-ok   { background: rgba($evt-ok, .14);    color: darken($evt-ok, 14%); }
@@ -330,9 +353,9 @@ $int-wait:  #f5a63c;
 /* Action button */
 .table-btn {
   display: inline-block;
-  padding: 6px 16px;
+  padding: 5px 12px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-decoration: none;
   color: #fff;
@@ -345,11 +368,14 @@ $int-wait:  #f5a63c;
 
 /* ═══  RESPONSIVE  ═══ */
 @media (max-width: 900px) {
+  .section-body {
+    grid-template-columns: 1fr;
+  }
   .cards-row {
     grid-template-columns: repeat(2, 1fr);
   }
   .chart-area {
-    height: 200px;
+    height: 150px;
   }
   .section-head {
     flex-direction: column;
@@ -358,14 +384,21 @@ $int-wait:  #f5a63c;
   }
 }
 
+@media (min-width: 1100px) {
+  .section-body {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: stretch;
+  }
+}
+
 @media (max-width: 600px) {
   .cards-row {
     grid-template-columns: 1fr;
   }
   .kpi-number {
-    font-size: 22px;
+    font-size: 20px;
   }
   .chart-area, .chart-area--doughnut {
-    height: 180px;
+    height: 140px;
   }
 }

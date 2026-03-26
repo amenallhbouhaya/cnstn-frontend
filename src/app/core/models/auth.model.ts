@@ -14,6 +14,25 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   message: string;
+  email?: string;
+  verificationRequired?: string;
+}
+
+export interface VerifyRegisterCodeRequest {
+  email: string;
+  code: string;
+}
+
+export interface VerifyRegisterCodeResponse {
+  message: string;
+}
+
+export interface ResendRegisterCodeRequest {
+  email: string;
+}
+
+export interface ResendRegisterCodeResponse {
+  message: string;
 }
 
 export interface AuthResponse {

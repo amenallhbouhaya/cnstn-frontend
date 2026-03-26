@@ -1,0 +1,70 @@
+<div class="check-card">
+  <div class="check-head">
+    <div>
+      <h2 class="check-title">Controle convocation</h2>
+      <p class="check-sub">Verifiez une convocation par reference et nom.</p>
+    </div>
+  </div>
+
+  <div class="check-form">
+    <div class="field">
+      <label>Reference</label>
+      <input class="input" [(ngModel)]="referenceCode" placeholder="CNSTN-0123" />
+    </div>
+
+    <div class="actions">
+      <button class="btn btn--primary" type="button" (click)="check()" [disabled]="loading">
+        {{ loading ? 'Verification...' : 'Verifier' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert--error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="result" *ngIf="status">
+    <div class="result-state" [class.ok]="status === 'VALID'" [class.warn]="status === 'ALREADY_USED'" [class.err]="status !== 'VALID' && status !== 'ALREADY_USED'">
+      {{ message }}
+    </div>
+
+    <div class="result-card" *ngIf="invitation">
+      <div class="line">
+        <span class="label">Reference</span>
+        <span class="value">{{ invitation.referenceCode }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Destinataire</span>
+        <span class="value">{{ invitation.destinataire }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Email</span>
+        <span class="value">{{ invitation.email || '-' }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Telephone</span>
+        <span class="value">{{ invitation.telephone || '-' }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Evenement</span>
+        <span class="value">{{ invitation.titre }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Salle</span>
+        <span class="value">{{ invitation.salle || '-' }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Date</span>
+        <span class="value">{{ invitation.dateDebut | date:'dd/MM/yyyy HH:mm' }} - {{ invitation.dateFin | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="line" *ngIf="invitation.usedAt">
+        <span class="label">Utilise le</span>
+        <span class="value">{{ invitation.usedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+
+    <div class="actions" *ngIf="status === 'VALID'">
+      <button class="btn btn--success" type="button" (click)="consume()" [disabled]="loading">
+        Marquer comme utilise
+      </button>
+    </div>
+  </div>
+</div>

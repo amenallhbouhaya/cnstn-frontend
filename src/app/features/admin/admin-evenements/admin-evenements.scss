@@ -1,3 +1,202 @@
 @use '../admin-crud-shared' as *;
 
 @include admin-crud-base;
+
+:host {
+	--magic-blue: #1d4ed8;
+	--magic-cyan: #0ea5e9;
+	--magic-gold: #f59e0b;
+}
+
+@keyframes shimmerFloat {
+	0% { transform: translate3d(-6%, -4%, 0) scale(1); opacity: .45; }
+	50% { transform: translate3d(7%, 3%, 0) scale(1.05); opacity: .65; }
+	100% { transform: translate3d(-6%, -4%, 0) scale(1); opacity: .45; }
+}
+
+.auth-page {
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(180deg, #f6faff 0%, #eef5ff 55%, #f8fbff 100%);
+	border-radius: 18px;
+}
+
+.auth-page::before,
+.auth-page::after {
+	content: '';
+	position: absolute;
+	pointer-events: none;
+	border-radius: 999px;
+	filter: blur(30px);
+	animation: shimmerFloat 14s ease-in-out infinite;
+}
+
+.auth-page::before {
+	width: 280px;
+	height: 280px;
+	top: -130px;
+	right: -90px;
+	background: radial-gradient(circle, rgba(14, 165, 233, .24), rgba(14, 165, 233, 0));
+}
+
+.auth-page::after {
+	width: 220px;
+	height: 220px;
+	left: -70px;
+	bottom: -100px;
+	background: radial-gradient(circle, rgba(245, 158, 11, .16), rgba(245, 158, 11, 0));
+	animation-delay: -6s;
+}
+
+.auth-card {
+	position: relative;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(249, 252, 255, .96));
+	border: 1px solid rgba(15, 23, 42, .09);
+	border-radius: 16px;
+	box-shadow: 0 24px 44px rgba(15, 23, 42, .1), 0 1px 2px rgba(15, 23, 42, .08);
+	backdrop-filter: blur(6px);
+}
+
+.auth-header {
+	margin-bottom: 16px;
+}
+
+.auth-title {
+	background: linear-gradient(90deg, #0f172a 0%, var(--magic-blue) 55%, var(--magic-cyan) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	letter-spacing: .2px;
+}
+
+.toolbar {
+	margin-bottom: 14px;
+}
+
+.form {
+	background: linear-gradient(180deg, #fafdff 0%, #ffffff 100%);
+	border: 1px solid rgba(14, 165, 233, .18);
+	box-shadow: 0 10px 22px rgba(2, 132, 199, .08);
+	padding: 14px;
+}
+
+.input {
+	transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.input:focus {
+	border-color: rgba(14, 165, 233, .6);
+	box-shadow: 0 0 0 4px rgba(14, 165, 233, .15);
+	transform: translateY(-1px);
+}
+
+.btn--primary {
+	background: linear-gradient(135deg, var(--magic-blue), var(--magic-cyan));
+	border-color: transparent;
+	box-shadow: 0 8px 18px rgba(29, 78, 216, .25);
+}
+
+.btn--primary:hover {
+	background: linear-gradient(135deg, #1e40af, #0284c7);
+	box-shadow: 0 10px 22px rgba(29, 78, 216, .3);
+}
+
+.invite-card {
+	margin: 8px 0 4px;
+	padding: 14px;
+	border: 1px solid rgba(14, 165, 233, .2);
+	border-radius: 12px;
+	background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+	box-shadow: 0 8px 16px rgba(2, 132, 199, .08);
+}
+
+.invite-head {
+	font-size: 13px;
+	font-weight: 700;
+	margin-bottom: 8px;
+	color: var(--text);
+}
+
+.invite-toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	color: var(--text);
+}
+
+.invite-hint {
+	margin-top: 8px;
+	font-size: 12px;
+	color: var(--muted);
+}
+
+.invite-search {
+	margin-top: 10px;
+}
+
+.invite-list {
+	margin-top: 10px;
+	display: grid;
+	gap: 6px;
+	max-height: 180px;
+	overflow: auto;
+	padding-right: 4px;
+}
+
+.invite-item {
+	display: grid;
+	grid-template-columns: 18px 1fr;
+	gap: 8px;
+	align-items: center;
+	padding: 8px 10px;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	background: #fff;
+	transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.invite-item:hover {
+	transform: translateY(-1px);
+	border-color: rgba(14, 165, 233, .35);
+	box-shadow: 0 8px 14px rgba(15, 23, 42, .08);
+}
+
+.invite-name {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--text);
+}
+
+.invite-meta {
+	font-size: 12px;
+	color: var(--muted);
+	display: block;
+}
+
+.invite-state {
+	margin-top: 8px;
+	font-size: 12px;
+	color: var(--muted);
+}
+
+.invite-state--ok {
+	color: #1f7a4d;
+}
+
+.invite-state--err {
+	color: #c0392b;
+}
+
+.input--sm {
+	padding: 7px 10px;
+	font-size: 13px;
+}
+
+.table-wrap {
+	border: 1px solid rgba(15, 23, 42, .08);
+	border-radius: 12px;
+	overflow: hidden;
+	background: #fff;
+}

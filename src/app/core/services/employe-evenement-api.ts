@@ -7,6 +7,7 @@ import { TypeEvenement } from '../models/type-evenement';
 export interface SalleMini { id: number; nom: string; capacite: number; description?: string; }
 export interface EquipMini { id: number; etat: string; reservable: boolean; typeEquipement: string; }
 export interface EquipAvailability extends EquipMini { available: boolean; }
+export interface ExternalPartnerPayload { nom: string; email: string; }
 
 @Injectable({ providedIn: 'root' })
 export class EmployeEvenementApi {
@@ -14,6 +15,10 @@ export class EmployeEvenementApi {
 
   myEvents() {
     return this.http.get<any[]>(`${environment.apiUrl}/Evenement/my`);
+  }
+
+  allEvents() {
+    return this.http.get<any[]>(`${environment.apiUrl}/Evenement/all`);
   }
 
   sallesDisponibles(dateDebut?: number | null, dateFin?: number | null) {
@@ -62,8 +67,12 @@ export class EmployeEvenementApi {
     dateDebut: number;
     dateFin: number;
     typeEvenement: TypeEvenement;
+    lienEnLigne?: string;
     salleId?: number | null;
     equipementIds?: number[];
+    inviteAll?: boolean;
+    inviteUserIds?: number[];
+    partenairesExternes?: ExternalPartnerPayload[];
   }) {
     return this.http.post(`${environment.apiUrl}/Evenement/add-full`, body);
   }

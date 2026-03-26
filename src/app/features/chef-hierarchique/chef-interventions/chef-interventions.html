@@ -1,0 +1,62 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Interventions en attente</h2>
+      <p class="page-subtitle">Validation Chef Hiérarchique</p>
+    </div>
+    <button class="btn btn-outline" type="button" (click)="load()">Rafraichir</button>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Demandeur</th>
+          <th>Service</th>
+          <th>Appareil</th>
+          <th>Serie</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th class="actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let i of items">
+          <tr>
+            <td>{{ i.demandeurNom }} {{ i.demandeurPrenom }}<br><small>{{ i.demandeurEmail }}</small></td>
+            <td>{{ i.serviceNom || '-' }}</td>
+            <td>{{ i.typeAppareil || '-' }}</td>
+            <td>{{ i.numeroSerie || '-' }}</td>
+            <td>{{ i.descriptionPanne || '-' }}</td>
+            <td>{{ i.dateDemande | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td class="actions">
+              <div class="action-buttons">
+                <button class="btn btn-small" type="button" (click)="accept(i.id)">Accepter</button>
+                <button class="btn btn-small btn-danger" type="button" (click)="openReject(i.id)">Refuser</button>
+              </div>
+            </td>
+          </tr>
+          <tr class="reject-row" *ngIf="rejectOpen[i.id]">
+            <td colspan="7">
+              <div class="reject-box">
+                <div class="label">Motif du refus (obligatoire)</div>
+                <input class="input" [(ngModel)]="rejectComment[i.id]" placeholder="Ex: informations incompletes..." />
+                <div class="reject-actions">
+                  <button class="btn btn-small btn-danger" type="button" (click)="confirmReject(i.id)">Confirmer refus</button>
+                  <button class="btn btn-small btn-outline" type="button" (click)="cancelReject(i.id)">Annuler</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="7" class="empty">Aucune intervention en attente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

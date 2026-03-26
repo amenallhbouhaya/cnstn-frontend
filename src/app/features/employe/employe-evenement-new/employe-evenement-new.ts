@@ -1,6 +1,6 @@
 import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DayCellMountArg } from '@fullcalendar/core';
@@ -8,20 +8,29 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 
 import { EmployeEvenementApi, SalleMini, EquipAvailability, EquipMini } from '../../../core/services/employe-evenement-api';
+import { Evenement } from '../../../core/models/evenement';
 import { TypeEvenement } from '../../../core/models/type-evenement';
 import { AuthService } from '../../../core/services/auth';
+import { UsersDirectoryService } from '../../../core/services/users-directory';
+import { UserDto } from '../../../core/models/user';
 
 import { catchError, forkJoin, of } from 'rxjs';
+
+interface ExternalPartnerDraft {
+  nom: string;
+  email: string;
+}
 
 @Component({
   selector: 'app-employe-evenement-new',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, FullCalendarModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, FullCalendarModule],
   templateUrl: './employe-evenement-new.html',
   styleUrl: './employe-evenement-new.scss'
 })
 export class EmployeEvenementNewComponent {
   private api = inject(EmployeEvenementApi);
+  private usersApi = inject(UsersDirectoryService);
   private fb = inject(FormBuilder);
   private platformId = inject(PLATFORM_ID);
   readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -65,6 +74,12 @@ export class EmployeEvenementNewComponent {
   msg = '';
   equipementWarnMsg = '';
 
+  users: UserDto[] = [];
+  inviteAll = false;
+  inviteSearch = '';
+  selectedUserIds = new Set<number>();
+  externalPartners: ExternalPartnerDraft[] = [{ nom: '', email: '' }];
+
   form = this.fb.group({
     nom: [''],
     titre: ['', Validators.required],
@@ -98,7 +113,11 @@ export class EmployeEvenementNewComponent {
         start: rangeStart
       },
       dateClick: (arg) => this.onDateClick(arg),
-      dayCellDidMount: (arg) => this.decorateDayCell(arg)
+      dayCellDidMount: (arg) => this.decorateDayCell(arg),
+      eventContent: (arg) => {
+        const title = arg.event.title ?? '';
+        return { html: `<span class="event-badge">${title}</span>` };
+      }
     };
 
     this.form.controls.typeEvenement.valueChanges.subscribe((value) => {
@@ -110,6 +129,31 @@ export class EmployeEvenementNewComponent {
     this.form.controls.endTime.valueChanges.subscribe(() => this.refreshAvailability());
 
     this.applyTypeRules(TypeEvenement.Presentiel);
+    this.loadUsers();
+    this.loadCalendarEvents();
+  }
+
+  private loadCalendarEvents() {
+    this.api.allEvents().subscribe({
+      next: (data) => {
+        const now = new Date();
+        const items = (data ?? []) as Evenement[];
+        const future = items.filter((e) => {
+          const end = e.dateFin ? new Date(e.dateFin) : null;
+          return end ? end >= now : false;
+        });
+
+        this.calendarOptions = {
+          ...this.calendarOptions,
+          events: future.map((e) => ({
+            title: e.titre,
+            start: e.dateDebut,
+            end: e.dateFin
+          }))
+        };
+      },
+      error: (err) => console.log(err)
+    });
   }
 
   onDateClick(arg: DateClickArg) {
@@ -125,6 +169,10 @@ export class EmployeEvenementNewComponent {
     this.equipements = [];
     this.noSallesAvailable = false;
     this.selectedEquipIds.clear();
+    this.inviteAll = false;
+    this.inviteSearch = '';
+    this.selectedUserIds.clear();
+    this.externalPartners = [{ nom: '', email: '' }];
 
     this.form.reset({
       nom: '',
@@ -358,6 +406,78 @@ export class EmployeEvenementNewComponent {
     else this.selectedEquipIds.delete(equipement.id);
   }
 
+  loadUsers() {
+    this.usersApi.getAll().subscribe({
+      next: (data) => { this.users = data ?? []; },
+      error: (err) => { console.log(err); }
+    });
+  }
+
+  get filteredUsers(): UserDto[] {
+    const q = (this.inviteSearch || '').toLowerCase().trim();
+    if (!q) return this.users ?? [];
+    return (this.users ?? []).filter(u =>
+      `${u.nom} ${u.prenom} ${u.email} ${u.role}`.toLowerCase().includes(q)
+    );
+  }
+
+  toggleInviteAll(checked: boolean) {
+    this.inviteAll = checked;
+    if (checked) this.selectedUserIds.clear();
+  }
+
+  toggleUser(id: number) {
+    if (this.selectedUserIds.has(id)) this.selectedUserIds.delete(id);
+    else this.selectedUserIds.add(id);
+  }
+
+  addExternalPartner() {
+    this.externalPartners = [...this.externalPartners, { nom: '', email: '' }];
+  }
+
+  removeExternalPartner(index: number) {
+    this.externalPartners = this.externalPartners.filter((_, i) => i !== index);
+    if (this.externalPartners.length === 0) {
+      this.externalPartners = [{ nom: '', email: '' }];
+    }
+  }
+
+  private parseExternalPartners(): { ok: boolean; value: ExternalPartnerDraft[]; error?: string } {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const result: ExternalPartnerDraft[] = [];
+
+    for (let i = 0; i < this.externalPartners.length; i++) {
+      const row = this.externalPartners[i];
+      const nom = (row?.nom ?? '').trim();
+      const email = (row?.email ?? '').trim();
+      const rowNumber = i + 1;
+
+      if (!nom && !email) continue;
+      if (!nom || !email) {
+        return {
+          ok: false,
+          value: [],
+          error: `Partenaire externe #${rowNumber}: nom et email sont obligatoires ensemble`
+        };
+      }
+      if (!emailRegex.test(email)) {
+        return {
+          ok: false,
+          value: [],
+          error: `Partenaire externe #${rowNumber}: email invalide`
+        };
+      }
+
+      result.push({ nom, email });
+    }
+
+    const deduped = Array.from(
+      new Map(result.map((p) => [`${p.nom.toLowerCase()}|${p.email.toLowerCase()}`, p])).values()
+    );
+
+    return { ok: true, value: deduped };
+  }
+
   submit() {
     if (this.form.invalid) return;
 
@@ -375,6 +495,13 @@ export class EmployeEvenementNewComponent {
       return;
     }
 
+    const partenaires = this.parseExternalPartners();
+    if (!partenaires.ok) {
+      this.loading = false;
+      this.errorMsg = partenaires.error ?? 'Données partenaires externes invalides';
+      return;
+    }
+
     let finalDescription = v.description ?? '';
     if (this.showOnlineLinkField && v.onlineLink) {
       finalDescription = `${finalDescription}\nLien: ${v.onlineLink}`.trim();
@@ -387,8 +514,12 @@ export class EmployeEvenementNewComponent {
       dateDebut: startDateTime.getTime(),
       dateFin: endDateTime.getTime(),
       typeEvenement: v.typeEvenement,
+      lienEnLigne: this.showOnlineLinkField ? (v.onlineLink ?? '') : '',
       salleId: this.showSalleField ? (v.salleId ?? null) : null,
-      equipementIds: this.showEquipementsField ? Array.from(this.selectedEquipIds) : []
+      equipementIds: this.showEquipementsField ? Array.from(this.selectedEquipIds) : [],
+      inviteAll: this.inviteAll,
+      inviteUserIds: Array.from(this.selectedUserIds),
+      partenairesExternes: partenaires.value
     };
 
     this.api.createEvenementFull(payload).subscribe({

@@ -52,6 +52,91 @@
           <textarea class="field__input field__input--textarea" formControlName="description" placeholder="Décrivez l'événement..."></textarea>
         </div>
 
+        <div class="invite-card">
+          <div class="invite-head">Invitations (apres acceptation)</div>
+          <label class="invite-toggle">
+            <input
+              type="checkbox"
+              [checked]="inviteAll"
+              (change)="toggleInviteAll($any($event.target).checked)"
+            />
+            <span>Inviter tous les utilisateurs</span>
+          </label>
+
+          <div class="invite-hint" *ngIf="inviteAll">
+            Tous les utilisateurs recevront une invitation apres acceptation.
+          </div>
+
+          <div class="invite-search" *ngIf="!inviteAll">
+            <input
+              class="field__input field__input--sm"
+              [(ngModel)]="inviteSearch"
+              [ngModelOptions]="{ standalone: true }"
+              name="inviteSearch"
+              placeholder="Rechercher utilisateur..."
+            />
+          </div>
+
+          <div class="invite-list" *ngIf="!inviteAll">
+            <label class="invite-item" *ngFor="let u of filteredUsers">
+              <input
+                type="checkbox"
+                [checked]="selectedUserIds.has(u.id)"
+                (change)="toggleUser(u.id)"
+              />
+              <span class="invite-name">{{ u.nom }} {{ u.prenom }}</span>
+              <span class="invite-meta">{{ u.email }} · {{ u.role }}</span>
+            </label>
+          </div>
+
+          <div class="invite-partner">
+            <div class="invite-head invite-head--sub">Inviter un partenaire externe</div>
+            <div class="invite-partner-list">
+              <div class="invite-partner-row" *ngFor="let p of externalPartners; let i = index">
+                <div class="form-row-2">
+                  <div class="field">
+                    <label class="field__label">Nom du partenaire</label>
+                    <input
+                      class="field__input field__input--sm"
+                      [(ngModel)]="p.nom"
+                      [ngModelOptions]="{ standalone: true }"
+                      [name]="'partenaireNom' + i"
+                      placeholder="Nom complet"
+                    >
+                  </div>
+                  <div class="field">
+                    <label class="field__label">Email du partenaire</label>
+                    <input
+                      class="field__input field__input--sm"
+                      [(ngModel)]="p.email"
+                      [ngModelOptions]="{ standalone: true }"
+                      [name]="'partenaireEmail' + i"
+                      placeholder="email@exemple.tn"
+                    >
+                  </div>
+                </div>
+                <button
+                  class="btn btn--outline btn--sm invite-partner-remove"
+                  type="button"
+                  (click)="removeExternalPartner(i)"
+                  [disabled]="externalPartners.length === 1"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
+
+            <div class="invite-partner-actions">
+              <button class="btn btn--outline btn--sm" type="button" (click)="addExternalPartner()">
+                Ajouter un partenaire
+              </button>
+            </div>
+
+            <small class="hint">Les invitations externes seront envoyees apres approbation, avec code de reference.</small>
+          </div>
+
+        </div>
+
         <div class="form-row-2">
           <div class="field">
             <label class="field__label">Heure début *</label>

@@ -11,26 +11,13 @@
 
     <form class="form" [formGroup]="form" (ngSubmit)="submit()">
       <div class="form-row">
-        <div class="label">Date d'acquisition</div>
-        <input class="input" type="date" formControlName="dateAquisation">
+        <div class="label">Nom</div>
+        <input class="input" formControlName="nom" placeholder="Nom de l'equipement">
       </div>
 
       <div class="form-row">
-        <div class="label">Etat</div>
-        <input class="input" formControlName="etat" placeholder="Bon / En panne ...">
-      </div>
-
-      <div class="form-row">
-        <div class="label">Reservable</div>
-        <input type="checkbox" formControlName="reservable">
-      </div>
-
-      <div class="form-row">
-        <div class="label">Type</div>
-        <select class="input" formControlName="typeEquipement">
-          <option [ngValue]="null">-- choisir --</option>
-          <option *ngFor="let t of typeValues" [ngValue]="t">{{ t }}</option>
-        </select>
+        <div class="label">Numero de serie</div>
+        <input class="input" formControlName="numeroSerie" placeholder="Ex: 2020">
       </div>
 
       <button class="btn btn--primary" type="submit">
@@ -48,7 +35,8 @@
       <table>
         <thead>
           <tr>
-            <th>Type</th>
+            <th>Nom</th>
+            <th>Serie</th>
             <th>Etat</th>
             <th>Reservable</th>
             <th>Date</th>
@@ -57,7 +45,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let e of items">
-            <td>{{ e.typeEquipement }}</td>
+            <td>{{ e.nom || '-' }}</td>
+            <td>{{ e.numeroSerie || '-' }}</td>
             <td>{{ e.etat }}</td>
             <td>{{ e.reservable ? 'Oui' : 'Non' }}</td>
             <td>{{ e.dateAquisation | date:'yyyy-MM-dd' }}</td>

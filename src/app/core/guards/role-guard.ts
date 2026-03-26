@@ -18,9 +18,9 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const role = auth.role;
   const normalize = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
-  if (!auth.isLoggedIn()) return router.parseUrl('/login');
+  if (!auth.isLoggedIn()) return router.parseUrl('/');
   if (!allowed) return true; // إذا ما فماش roles محددة، خليه يمر
 
   const allowedNormalized = allowed.map(normalize);
-  return role && allowedNormalized.includes(normalize(role)) ? true : router.parseUrl('/login');
+  return role && allowedNormalized.includes(normalize(role)) ? true : router.parseUrl('/');
 };

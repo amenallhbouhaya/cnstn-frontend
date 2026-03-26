@@ -21,23 +21,25 @@ export class AdminHomeComponent implements OnInit {
 
   /* ── Charts ── */
 
-  // --- Événements (blue family) ---
-  eventsChartData: ChartConfiguration<'bar'>['data'] = {
+  // --- Événements (blue family) – doughnut ---
+  eventsChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: ['Approuvés', 'En attente', 'Refusés'],
     datasets: [{
       label: 'Événements',
       data: [0, 0, 0],
       backgroundColor: ['rgba(54,130,237,.78)', 'rgba(100,165,245,.55)', 'rgba(30,80,180,.45)'],
-      borderColor: ['#3682ed', '#64a5f5', '#1e50b4'],
-      borderWidth: 1,
-      borderRadius: 4
+      borderColor: '#fff',
+      borderWidth: 3,
+      hoverOffset: 6
     }]
   };
-  eventsChartOptions: ChartConfiguration<'bar'>['options'] = {
+  eventsChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: true, position: 'top' } },
-    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    cutout: '62%',
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10 } }
+    }
   };
 
   // --- Salles (green / teal family) – doughnut ---

@@ -1,0 +1,71 @@
+<div class="invite-page">
+  <div class="invite-toolbar">
+    <button class="btn btn--outline" type="button" (click)="print()">Imprimer</button>
+    <button class="btn btn--primary" type="button" (click)="downloadPdf()">Telecharger PDF</button>
+  </div>
+
+  <div class="alert alert--error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="invite-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Chargement...</span>
+  </div>
+
+  <div class="invite-card" *ngIf="!loading && data">
+    <div class="invite-header">
+      <img class="invite-logo" src="cnstn-logo.png" alt="CNSTN">
+      <div>
+        <h1>Convocation</h1>
+        <p>Document officiel</p>
+      </div>
+    </div>
+
+    <div class="invite-section">
+      <div class="invite-line">
+        <span class="invite-label">Reference</span>
+        <span class="invite-value invite-value--title">{{ data.referenceCode }}</span>
+      </div>
+      <div class="invite-line">
+        <span class="invite-label">Destinataire</span>
+        <span class="invite-value">{{ data.destinataire || '-' }}</span>
+      </div>
+      <div class="invite-line">
+        <span class="invite-label">Organisateur</span>
+        <span class="invite-value">{{ data.organisateur || '-' }}</span>
+      </div>
+    </div>
+
+    <div class="invite-section">
+      <div class="invite-line">
+        <span class="invite-label">Evenement</span>
+        <span class="invite-value invite-value--title">{{ data.titre }}</span>
+      </div>
+      <div class="invite-line">
+        <span class="invite-label">Salle</span>
+        <span class="invite-value">{{ data.salle || '-' }}</span>
+      </div>
+      <div class="invite-line">
+        <span class="invite-label">Date</span>
+        <span class="invite-value">
+          {{ data.dateDebut | date:'dd/MM/yyyy HH:mm' }} - {{ data.dateFin | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="invite-section" *ngIf="data.description">
+      <div class="invite-label">Description</div>
+      <div class="invite-text">{{ data.description }}</div>
+    </div>
+
+    <div class="invite-footer">
+      <div class="invite-signature">
+        <div class="invite-sign-label">Signature organisateur</div>
+        <div class="invite-sign-line"></div>
+      </div>
+      <div class="invite-signature">
+        <div class="invite-sign-label">Signature destinataire</div>
+        <div class="invite-sign-line"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,8 @@ import { Router, RouterLink } from '@angular/router';
 
 import { InterventionApi } from '../../../core/services/intervention-api';
 import { EquipementService } from '../../../core/services/equipement';
+import { Equipement } from '../../../core/models/equipement';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-employe-intervention-new',
@@ -18,16 +20,34 @@ export class EmployeInterventionNewComponent {
   private api = inject(InterventionApi);
   private equipApi = inject(EquipementService);
   private router = inject(Router);
+  private auth = inject(AuthService);
 
-  equipements: any[] = [];
-  selectedIds = new Set<number>();
+  equipements: Equipement[] = [];
+  selectedEquipId: number | null = null;
 
   loading = false;
   errorMsg = '';
   msg = '';
 
+  private normalizeRole(value: string | null | undefined): string {
+    return String(value ?? '').replace(/\s+/g, '').toLowerCase();
+  }
+
+  get backLink(): string {
+    const role = this.normalizeRole(this.auth.role);
+    if (role === 'admin') return '/admin';
+    if (role === 'chefhierarchique' || role === 'chef-hierarchique') return '/chef-hierarchique';
+    if (role === 'responsablesalle') return '/responsable-salle';
+    if (role === 'responsablesecurite') return '/responsable-securite';
+    if (role === 'directeurdsn') return '/directeur-dsn';
+    return '/employe/interventions';
+  }
+
   form = this.fb.group({
-    description: ['', Validators.required]
+    nom: ['', Validators.required],
+    typeAppareil: ['', Validators.required],
+    numeroSerie: [''],
+    descriptionPanne: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -36,11 +56,20 @@ export class EmployeInterventionNewComponent {
       next: (data: any) => this.equipements = data ?? [],
       error: (err) => console.log(err)
     });
+
   }
 
-  toggle(id: number, checked: boolean) {
-    if (checked) this.selectedIds.add(id);
-    else this.selectedIds.delete(id);
+  onEquipementChange(value: string) {
+    const id = value ? Number(value) : null;
+    this.selectedEquipId = Number.isFinite(id as number) ? id : null;
+
+    const eq = this.equipements.find((e) => e.id === this.selectedEquipId);
+    if (eq) {
+      this.form.patchValue({
+        typeAppareil: String(eq.typeEquipement ?? ''),
+        numeroSerie: eq.numeroSerie ?? ''
+      });
+    }
   }
 
   submit() {
@@ -51,8 +80,11 @@ export class EmployeInterventionNewComponent {
     this.msg = '';
 
     this.api.create({
-      description: this.form.value.description!,
-      equipementIds: Array.from(this.selectedIds)
+      nom: this.form.value.nom!,
+      typeAppareil: this.form.value.typeAppareil!,
+      numeroSerie: this.form.value.numeroSerie!,
+      descriptionPanne: this.form.value.descriptionPanne!,
+      equipementIds: this.selectedEquipId ? [this.selectedEquipId] : []
     }).subscribe({
       next: () => {
         this.loading = false;

@@ -24,4 +24,10 @@ export class EvenementService {
       responseType: 'text' as const
     });
   }
+
+  invite(id: number, body: { inviteAll: boolean; userIds: number[] }) {
+    return this.http.post(`${environment.apiUrl}/Evenement/${id}/invite`, body, {
+      responseType: 'text' as const
+    });
+  }
 }

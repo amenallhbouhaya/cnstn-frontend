@@ -27,7 +27,10 @@
           <tr>
             <th>Date</th>
             <th>Statut</th>
-            <th>Description</th>
+            <th>Disponibilite</th>
+            <th>Appareil</th>
+            <th>Serie</th>
+            <th>Panne</th>
           </tr>
         </thead>
         <tbody>
@@ -36,12 +39,21 @@
             <td>
               <span
                 class="badge"
-                [class.badge--green]="i.statut === 'Terminée' || i.statut === 'Résolu'"
-                [class.badge--orange]="i.statut === 'EnCours' || i.statut === 'En cours'"
-                [class.badge--red]="i.statut === 'Rejeté' || i.statut === 'Annulé'"
-              >{{ i.statut }}</span>
+                [class.badge--green]="isRepared(i.statut)"
+                [class.badge--orange]="i.statut === 'EN_ATTENTE_CHEF' || i.statut === 'EN_ATTENTE_DSN' || i.statut === 'EN_COURS'"
+                [class.badge--red]="i.statut === 'REFUSEE_CHEF' || i.statut === 'CASSE'"
+              >{{ statusLabel(i.statut) }}</span>
             </td>
-            <td>{{ i.description }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge--green]="!isBlockingStatus(i.statut)"
+                [class.badge--orange]="isBlockingStatus(i.statut)"
+              >{{ isBlockingStatus(i.statut) ? 'Indisponible' : 'Disponible' }}</span>
+            </td>
+            <td>{{ i.typeAppareil || '-' }}</td>
+            <td>{{ i.numeroSerie || '-' }}</td>
+            <td>{{ i.descriptionPanne || '-' }}</td>
           </tr>
         </tbody>
       </table>

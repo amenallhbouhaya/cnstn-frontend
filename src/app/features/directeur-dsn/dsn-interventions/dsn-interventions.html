@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="page-head">
+    <div>
+      <h2 class="page-title">Interventions DSN</h2>
+      <p class="page-subtitle">Decisions et suivi des reparations</p>
+    </div>
+    <button class="btn btn-outline" type="button" (click)="load()">Rafraichir</button>
+  </div>
+
+  <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p *ngIf="loading" class="muted">Chargement...</p>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Demandeur</th>
+          <th>Appareil</th>
+          <th>Serie</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of items">
+          <td>{{ i.demandeurNom }} {{ i.demandeurPrenom }}</td>
+          <td>{{ i.typeAppareil || '-' }}</td>
+          <td>{{ i.numeroSerie || '-' }}</td>
+          <td>{{ i.statut }}</td>
+          <td>
+            <div class="actions" *ngIf="canDecide(i.statut)">
+              <button class="btn btn-small btn-primary" type="button" (click)="markRepaired(i)">Marquer repare</button>
+              <button class="btn btn-small btn-outline" type="button" (click)="markBroken(i)">Marquer casse</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="items.length === 0">
+          <td colspan="5" class="empty">Aucune intervention.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

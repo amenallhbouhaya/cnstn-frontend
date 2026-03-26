@@ -1,0 +1,78 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <img class="auth-logo" src="cnstn-logo.png" alt="CNSTN">
+      <h2 class="auth-title">Gestion des Posts Publics</h2>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn--primary" type="button" (click)="newItem()">+ Nouveau post</button>
+    </div>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-row">
+        <div class="label">Titre</div>
+        <input class="input" formControlName="title" placeholder="Titre du post">
+      </div>
+
+      <div class="form-row">
+        <div class="label">Description</div>
+        <textarea class="input textarea" formControlName="description" rows="4" placeholder="Texte descriptif"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="label">Image</div>
+        <div class="image-picker">
+          <input
+            #imageInput
+            type="file"
+            accept="image/*"
+            class="image-input"
+            (change)="onImageSelected($event)"
+          >
+          <button class="btn" type="button" (click)="imageInput.click()">Choisir une image</button>
+          <span class="image-name" *ngIf="selectedImageName">{{ selectedImageName }}</span>
+        </div>
+        <p class="field-error" *ngIf="uploadError">{{ uploadError }}</p>
+        <p class="field-error" *ngIf="form.get('imageUrl')?.invalid && form.get('imageUrl')?.touched">
+          Image obligatoire.
+        </p>
+        <img class="preview" *ngIf="form.value.imageUrl" [src]="form.value.imageUrl" alt="Aperçu image post">
+      </div>
+
+      <button class="btn btn--primary" type="submit">
+        {{ editingId === null ? 'Ajouter' : 'Enregistrer' }}
+      </button>
+    </form>
+
+    <hr class="divider" />
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Titre</th>
+            <th>Description</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>
+              <img class="thumb" [src]="item.imageUrl" [alt]="item.title">
+            </td>
+            <td>{{ item.title }}</td>
+            <td class="desc">{{ item.description }}</td>
+            <td class="actions">
+              <div class="actions-group">
+                <button class="btn" type="button" (click)="edit(item)">Edit</button>
+                <button class="btn btn--danger" type="button" (click)="remove(item.id)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

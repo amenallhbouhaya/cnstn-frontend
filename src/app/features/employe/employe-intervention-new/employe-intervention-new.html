@@ -4,7 +4,7 @@
       <h1 class="emp-title">Demande d'intervention</h1>
       <p class="emp-subtitle">Signalez un problème technique</p>
     </div>
-    <a class="btn btn--outline" routerLink="/employe/interventions">
+    <a class="btn btn--outline" [routerLink]="backLink">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Mes demandes
     </a>
@@ -22,18 +22,34 @@
   <div class="form-card">
     <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
       <div class="field">
-        <label class="field__label">Description du problème</label>
-        <input class="field__input" formControlName="description" placeholder="Décrivez le problème rencontré...">
+        <label class="field__label">Nom complet</label>
+        <input class="field__input" formControlName="nom" placeholder="Nom et prénom">
       </div>
 
       <div class="field">
-        <label class="field__label">Équipements concernés (optionnel)</label>
-        <div class="checkbox-grid">
-          <label *ngFor="let e of equipements" class="checkbox-label">
-            <input type="checkbox" (change)="toggle(e.id, $any($event.target).checked)">
-            <span>{{ e.typeEquipement }} — {{ e.etat }}</span>
-          </label>
-        </div>
+        <label class="field__label">Equipement concerne</label>
+        <select class="field__input" (change)="onEquipementChange($any($event.target).value)">
+          <option value="">-- Choisir un equipement --</option>
+          <option *ngFor="let e of equipements" [value]="e.id">
+            {{ e.typeEquipement }} — {{ e.numeroSerie || 'N/A' }}
+          </option>
+        </select>
+        <small class="hint" *ngIf="equipements.length === 0">Aucun equipement disponible.</small>
+      </div>
+
+      <div class="field">
+        <label class="field__label">Type appareil</label>
+        <input class="field__input" formControlName="typeAppareil" placeholder="Type appareil">
+      </div>
+
+      <div class="field">
+        <label class="field__label">Numero de serie</label>
+        <input class="field__input" formControlName="numeroSerie" placeholder="Numero de serie">
+      </div>
+
+      <div class="field">
+        <label class="field__label">Description panne</label>
+        <input class="field__input" formControlName="descriptionPanne" placeholder="Decrivez la panne...">
       </div>
 
       <div class="form-actions">

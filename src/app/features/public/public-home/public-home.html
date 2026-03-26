@@ -1,0 +1,173 @@
+<div class="public-home-page">
+	<header class="home-header">
+		<a class="brand" routerLink="/">
+			<img src="cnstn-logo.png" alt="Logo CNSTN">
+			<div>
+				<strong>CNSTN</strong>
+				<span>Centre National des Sciences et Technologies Nucleaires</span>
+			</div>
+		</a>
+
+		<nav class="docs-navbar" aria-label="Ressources qualite et certification">
+			<a class="docs-nav-link" href="/ressources/procedures-formulaires-organisatic.html" target="_blank" rel="noopener noreferrer">
+				Procedures et formulaires
+			</a>
+			<a class="docs-nav-link" href="/ressources/procedures-techniques.html" target="_blank" rel="noopener noreferrer">
+				Procedures techniques
+			</a>
+			<a class="docs-nav-link" href="/ressources/projet-certification-cnstn.html" target="_blank" rel="noopener noreferrer">
+				Projet certification
+			</a>
+			<a class="docs-nav-link" href="/ressources/manuel-qualite.html" target="_blank" rel="noopener noreferrer">
+				Manuel qualite
+			</a>
+			<a class="docs-nav-link" href="/ressources/politique-qualite.html" target="_blank" rel="noopener noreferrer">
+				Politique qualite
+			</a>
+			<a class="docs-nav-link" href="/ressources/missions-stages-realises.html" target="_blank" rel="noopener noreferrer">
+				المهمات و التربصات
+			</a>
+		</nav>
+
+		<button type="button" class="login-btn" (click)="openLoginModal()">Se Connecter</button>
+	</header>
+
+	<main class="home-main">
+		<section class="news-section" aria-label="Actualites et annonces">
+			<h1>Actualites &amp; Annonces</h1>
+
+			<p class="empty-news" *ngIf="news.length === 0">Aucune annonce pour le moment.</p>
+
+			<div class="news-grid" *ngIf="news.length > 0">
+				<article class="news-card" *ngFor="let item of news">
+					<img [src]="item.imageUrl" [alt]="item.title">
+					<div class="news-content">
+						<h2>{{ item.title }}</h2>
+						<p>{{ item.description }}</p>
+						<button type="button" class="read-more-btn">Lire plus</button>
+					</div>
+				</article>
+			</div>
+		</section>
+	</main>
+
+	<footer class="home-footer">
+		<div class="footer-left">
+			<p>
+				Telephone: <a href="tel:+21671537410">71 537 410</a>
+			</p>
+			<p>
+				Email: <a href="mailto:official@cnstn.rnrt.tn">official@cnstn.rnrt.tn</a>
+			</p>
+		</div>
+
+		<a
+			class="facebook-link"
+			href="https://www.facebook.com/"
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="Page Facebook"
+		>
+			<svg viewBox="0 0 24 24" aria-hidden="true">
+				<path
+					d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.52 1.49-3.92 3.77-3.92 1.09 0 2.23.2 2.23.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.77l-.44 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94z"
+				/>
+			</svg>
+			<span>Facebook</span>
+		</a>
+
+		<p class="copyright">&copy; {{ year }} CNSTN. Tous droits reserves.</p>
+	</footer>
+
+	<div class="login-modal" *ngIf="showLoginModal" (click)="closeLoginModal()">
+		<section class="login-card" role="dialog" aria-modal="true" aria-label="Connexion" (click)="$event.stopPropagation()">
+			<button type="button" class="modal-close" aria-label="Fermer" (click)="closeLoginModal()">&times;</button>
+			<h2>{{ modalMode === 'login' ? 'Connexion' : 'Creer un compte' }}</h2>
+			<p *ngIf="modalMode === 'login'">Connectez-vous pour accéder à votre espace.</p>
+			<p *ngIf="modalMode === 'register'">Remplissez vos informations pour vous inscrire.</p>
+
+			<form class="login-form" *ngIf="modalMode === 'login'" [formGroup]="form" (ngSubmit)="submitLogin()">
+				<div class="form-row">
+					<label for="email">Email</label>
+					<input id="email" type="email" formControlName="email" placeholder="ex: test@mail.com">
+				</div>
+
+				<div class="form-row">
+					<label for="password">Mot de passe</label>
+					<input id="password" type="password" formControlName="password" placeholder="••••••••">
+				</div>
+
+				<button type="submit" class="submit-btn">Se connecter</button>
+				<p class="login-error" *ngIf="errorMsg">{{ errorMsg }}</p>
+			</form>
+
+			<form class="login-form" *ngIf="modalMode === 'register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+				<div *ngIf="!awaitingEmailVerification">
+				<div class="split-grid">
+					<div class="form-row">
+						<label for="reg-nom">Nom</label>
+						<input id="reg-nom" type="text" formControlName="nom" placeholder="Nom">
+					</div>
+					<div class="form-row">
+						<label for="reg-prenom">Prenom</label>
+						<input id="reg-prenom" type="text" formControlName="prenom" placeholder="Prenom">
+					</div>
+				</div>
+
+				<div class="form-row">
+					<label for="reg-email">Email</label>
+					<input id="reg-email" type="email" formControlName="email" placeholder="ex: test@mail.com">
+				</div>
+
+				<div class="form-row">
+					<label for="reg-password">Mot de passe</label>
+					<input id="reg-password" type="password" formControlName="password" placeholder="••••••••">
+				</div>
+
+				<div class="split-grid">
+					<div class="form-row">
+						<label for="reg-matricule">Matricule</label>
+						<input id="reg-matricule" type="number" formControlName="matricule" placeholder="1234">
+					</div>
+					<div class="form-row">
+						<label for="reg-telephone">Telephone</label>
+						<input id="reg-telephone" type="number" formControlName="telephone" placeholder="99 999 999">
+					</div>
+				</div>
+				</div>
+
+				<div *ngIf="awaitingEmailVerification" class="form-row">
+					<label for="reg-verify-code">Code de verification</label>
+					<input
+						id="reg-verify-code"
+						type="text"
+						[(ngModel)]="verificationCode"
+						[ngModelOptions]="{ standalone: true }"
+						name="verificationCode"
+						maxlength="6"
+						placeholder="Entrez le code recu par email"
+					>
+					<small class="verify-hint">Email: {{ verificationEmail }}</small>
+					<button type="button" class="resend-btn" (click)="resendVerificationCode()">Renvoyer code</button>
+				</div>
+
+				<button type="submit" class="submit-btn">
+					{{ awaitingEmailVerification ? 'Verifier le code' : 'Creer mon compte' }}
+				</button>
+				<p class="login-error" *ngIf="registerErrorMsg">{{ registerErrorMsg }}</p>
+				<p class="login-success" *ngIf="registerSuccessMsg">{{ registerSuccessMsg }}</p>
+				<p class="login-error" *ngIf="verifyErrorMsg">{{ verifyErrorMsg }}</p>
+				<p class="login-success" *ngIf="verifySuccessMsg">{{ verifySuccessMsg }}</p>
+				<p class="login-success" *ngIf="resendMsg">{{ resendMsg }}</p>
+			</form>
+
+			<div class="login-footer" *ngIf="modalMode === 'login'">
+				Pas de compte ? <button type="button" class="switch-link" (click)="switchToRegister()">Creer un compte</button>
+			</div>
+
+			<div class="login-footer" *ngIf="modalMode === 'register'">
+				Deja un compte ? <button type="button" class="switch-link" (click)="switchToLogin()">Se connecter</button>
+			</div>
+		</section>
+	</div>
+</div>

@@ -43,6 +43,48 @@
         </select>
       </div>
 
+      <div class="invite-card">
+        <div class="invite-head">Invitations</div>
+        <label class="invite-toggle">
+          <input
+            type="checkbox"
+            [checked]="inviteAll"
+            (change)="toggleInviteAll($any($event.target).checked)"
+          />
+          <span>Inviter tous les utilisateurs</span>
+        </label>
+
+        <div class="invite-hint" *ngIf="inviteAll">
+          Tous les utilisateurs recevront une invitation apres l'enregistrement.
+        </div>
+
+        <div class="invite-search" *ngIf="!inviteAll">
+          <input
+            class="input input--sm"
+            [(ngModel)]="inviteSearch"
+            [ngModelOptions]="{ standalone: true }"
+            name="inviteSearch"
+            placeholder="Rechercher utilisateur..."
+          />
+        </div>
+
+        <div class="invite-list" *ngIf="!inviteAll">
+          <label class="invite-item" *ngFor="let u of filteredUsers">
+            <input
+              type="checkbox"
+              [checked]="selectedUserIds.has(u.id)"
+              (change)="toggleUser(u.id)"
+            />
+            <span class="invite-name">{{ u.nom }} {{ u.prenom }}</span>
+            <span class="invite-meta">{{ u.email }} · {{ u.role }}</span>
+          </label>
+        </div>
+
+        <div class="invite-state" *ngIf="inviteSending">Envoi des invitations...</div>
+        <div class="invite-state invite-state--ok" *ngIf="inviteSuccess">{{ inviteSuccess }}</div>
+        <div class="invite-state invite-state--err" *ngIf="inviteError">{{ inviteError }}</div>
+      </div>
+
       <button class="btn btn--primary" type="submit">
         {{ editingId === null ? 'Ajouter' : 'Enregistrer' }}
       </button>

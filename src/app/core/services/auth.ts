@@ -2,7 +2,14 @@ import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { RegisterRequest, RegisterResponse } from '../models/auth.model';
+import {
+  RegisterRequest,
+  RegisterResponse,
+  ResendRegisterCodeRequest,
+  ResendRegisterCodeResponse,
+  VerifyRegisterCodeRequest,
+  VerifyRegisterCodeResponse
+} from '../models/auth.model';
 import { tap } from 'rxjs';
 
 const TOKEN_KEY = 'token';
@@ -27,6 +34,14 @@ export class AuthService {
 
   register(body: RegisterRequest) {
     return this.http.post<RegisterResponse>(`${environment.apiUrl}/api/auth/register`, body);
+  }
+
+  verifyRegisterCode(body: VerifyRegisterCodeRequest) {
+    return this.http.post<VerifyRegisterCodeResponse>(`${environment.apiUrl}/api/auth/register/verify`, body);
+  }
+
+  resendRegisterCode(body: ResendRegisterCodeRequest) {
+    return this.http.post<ResendRegisterCodeResponse>(`${environment.apiUrl}/api/auth/register/resend`, body);
   }
 
   logout() {
