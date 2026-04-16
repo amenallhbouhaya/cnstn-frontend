@@ -22,4 +22,8 @@ export class AdminUsersService {
   updateRole(id: number, role: string) {
     return this.http.put<UserDto>(`${environment.apiUrl}/api/admin/users/${id}/role`, { role });
   }
+
+  deleteUser(id: number) {
+    return this.http.delete<{ status: string; message?: string }>(`${environment.apiUrl}/api/admin/users/${id}`);
+  }
 }

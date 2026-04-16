@@ -1,0 +1,100 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.page-title {
+  margin: 0;
+  color: var(--text);
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+  color: var(--text);
+  font-size: 14px;
+}
+.table th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.actions {
+  width: 190px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-small {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+.btn-danger {
+  border-color: #f5c0c0;
+  color: #9f1f1f;
+}
+
+.btn-outline {
+  background: transparent;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.alert {
+  margin: 0 0 10px;
+  color: #b42318;
+}
+
+.ok {
+  margin: 0 0 10px;
+  color: #067647;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+}

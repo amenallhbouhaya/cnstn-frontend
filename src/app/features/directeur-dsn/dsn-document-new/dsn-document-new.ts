@@ -11,7 +11,7 @@ import { DocumentApi } from '../../../core/services/document-api';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './dsn-document-new.html',
-  styleUrl: './dsn-document-new.scss'
+  styleUrl: './dsn-document-new.css'
 })
 export class DsnDocumentNewComponent {
   private fb = inject(FormBuilder);

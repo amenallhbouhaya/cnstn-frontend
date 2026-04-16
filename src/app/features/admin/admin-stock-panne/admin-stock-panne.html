@@ -8,6 +8,7 @@
   </div>
 
   <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="ok" *ngIf="successMsg">{{ successMsg }}</p>
   <p *ngIf="loading" class="muted">Chargement...</p>
 
   <div class="table-wrap" *ngIf="!loading">
@@ -18,6 +19,7 @@
           <th>Date ajout</th>
           <th>Demandeur</th>
           <th>Telephone</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -26,10 +28,19 @@
           <td>{{ i.dateAjout | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ i.demandeurNom || '-' }}</td>
           <td>{{ i.demandeurTelephone || '-' }}</td>
+          <td>
+            <button
+              class="btn btn-small btn-primary"
+              type="button"
+              [disabled]="processingId !== null"
+              (click)="restore(i)">
+              {{ processingId === i.id ? 'Restauration...' : 'Restaurer' }}
+            </button>
+          </td>
         </tr>
 
         <tr *ngIf="items.length === 0">
-          <td colspan="4" class="empty">Aucune piece.</td>
+          <td colspan="5" class="empty">Aucune piece.</td>
         </tr>
       </tbody>
     </table>

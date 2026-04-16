@@ -40,7 +40,7 @@
               <span
                 class="badge"
                 [class.badge--green]="isRepared(i.statut)"
-                [class.badge--orange]="i.statut === 'EN_ATTENTE_CHEF' || i.statut === 'EN_ATTENTE_DSN' || i.statut === 'EN_COURS'"
+                [class.badge--orange]="i.statut === 'EN_ATTENTE_CHEF' || i.statut === 'EN_ATTENTE_ADMIN' || i.statut === 'EN_ATTENTE_DSN' || i.statut === 'EN_COURS'"
                 [class.badge--red]="i.statut === 'REFUSEE_CHEF' || i.statut === 'CASSE'"
               >{{ statusLabel(i.statut) }}</span>
             </td>

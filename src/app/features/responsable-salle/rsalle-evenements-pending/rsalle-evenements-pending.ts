@@ -10,7 +10,7 @@ import { PLATFORM_ID } from '@angular/core';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './rsalle-evenements-pending.html',
-  styleUrl: './rsalle-evenements-pending.scss'
+  styleUrl: './rsalle-evenements-pending.css'
 })
 export class RsalleEvenementsPendingComponent {
   private api = inject(EvenementApprovalApi);

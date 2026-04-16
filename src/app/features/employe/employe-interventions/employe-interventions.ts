@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { InterventionApi, InterventionDto } from '../../../core/services/intervention-api';
+import { interventionStatusLabel, isInterventionBlockingStatus } from '../../../core/models/intervention-status';
 
 @Component({
   selector: 'app-employe-interventions',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './employe-interventions.html',
-  styleUrl: './employe-interventions.scss'
+  styleUrl: './employe-interventions.css'
 })
 export class EmployeInterventionsComponent {
   private api = inject(InterventionApi);
@@ -38,26 +39,11 @@ export class EmployeInterventionsComponent {
   }
 
   statusLabel(status?: string | null) {
-    switch (status) {
-      case 'EN_ATTENTE_CHEF':
-        return 'En attente chef';
-      case 'EN_ATTENTE_DSN':
-        return 'En attente DSN';
-      case 'EN_COURS':
-        return 'En cours';
-      case 'REPARE':
-        return 'Repare';
-      case 'CASSE':
-        return 'Casse';
-      case 'REFUSEE_CHEF':
-        return 'Refusee chef';
-      default:
-        return status || '-';
-    }
+    return interventionStatusLabel(status);
   }
 
   isBlockingStatus(status?: string | null) {
-    return status === 'EN_ATTENTE_CHEF' || status === 'EN_ATTENTE_DSN' || status === 'EN_COURS' || status === 'CASSE';
+    return isInterventionBlockingStatus(status);
   }
 
   isRepared(status?: string | null) {

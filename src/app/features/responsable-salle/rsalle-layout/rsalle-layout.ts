@@ -12,7 +12,7 @@ import { catchError, startWith, switchMap, takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [RouterLink, RouterOutlet, RouterLinkActive, NgIf],
   templateUrl: './rsalle-layout.html',
-  styleUrl: './rsalle-layout.scss'
+  styleUrl: './rsalle-layout.css'
 })
 export class RsalleLayoutComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);

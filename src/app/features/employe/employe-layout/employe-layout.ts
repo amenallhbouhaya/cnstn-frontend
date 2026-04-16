@@ -1,29 +1,53 @@
-import { Component, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser, NgIf } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+  inject
+} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
-import { NotificationsApi } from '../../../core/services/notifications';
+import { AppNotification, NotificationsApi } from '../../../core/services/notifications';
+import { UserMeApi } from '../../../core/services/user-me-api';
 import { Subject, interval, of } from 'rxjs';
 import { catchError, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employe-layout',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIf],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './employe-layout.html',
-  styleUrl: './employe-layout.scss'
+  styleUrl: './employe-layout.css'
 })
 export class EmployeLayoutComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private router = inject(Router);
   private notificationsApi = inject(NotificationsApi);
+  private userMeApi = inject(UserMeApi);
   private destroy$ = new Subject<void>();
   private platformId = inject(PLATFORM_ID);
 
+  @ViewChild('notifWrapper') notifWrapper?: ElementRef<HTMLElement>;
+
   unreadCount = 0;
+  notifMenuOpen = false;
+  notifLoading = false;
+  notifError = '';
+  notifications: AppNotification[] = [];
+
+  userDisplayName = 'Mon compte';
+  userInitials = 'MC';
+  userPhotoUrl: string | null = null;
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    this.loadCurrentUser();
+    this.loadCurrentUserPhoto();
 
     interval(20000)
       .pipe(
@@ -34,12 +58,150 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
       )
       .subscribe((res) => {
         this.unreadCount = res?.count ?? 0;
+
+        if (this.notifMenuOpen) {
+          this.loadNotifications(false);
+        }
       });
   }
 
   ngOnDestroy(): void {
+    if (this.userPhotoUrl) {
+      URL.revokeObjectURL(this.userPhotoUrl);
+    }
+
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.notifMenuOpen || !this.notifWrapper) return;
+
+    const target = event.target as Node | null;
+    if (target && !this.notifWrapper.nativeElement.contains(target)) {
+      this.notifMenuOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.notifMenuOpen = false;
+  }
+
+  toggleNotifications(event: MouseEvent): void {
+    event.stopPropagation();
+    this.notifMenuOpen = !this.notifMenuOpen;
+
+    if (this.notifMenuOpen) {
+      this.loadNotifications(true);
+    }
+  }
+
+  loadNotifications(showLoader = true): void {
+    if (showLoader) {
+      this.notifLoading = true;
+    }
+
+    this.notifError = '';
+
+    this.notificationsApi.my()
+      .pipe(
+        catchError(() => {
+          this.notifError = 'Impossible de charger les notifications';
+          return of([] as AppNotification[]);
+        })
+      )
+      .subscribe((items) => {
+        this.notifications = items ?? [];
+        this.notifLoading = false;
+      });
+  }
+
+  openNotification(item: AppNotification): void {
+    const targetPath = item.targetPath || '/employe/notifications';
+    const go = () => {
+      this.notifMenuOpen = false;
+      this.router.navigateByUrl(targetPath);
+    };
+
+    if (item.lu) {
+      go();
+      return;
+    }
+
+    this.notificationsApi.markRead(item.id).subscribe({
+      next: () => {
+        item.lu = true;
+        this.unreadCount = Math.max(0, this.unreadCount - 1);
+        go();
+      },
+      error: () => go()
+    });
+  }
+
+  markAllNotificationsRead(event: MouseEvent): void {
+    event.stopPropagation();
+
+    this.notificationsApi.markAllRead().subscribe({
+      next: () => {
+        this.notifications = this.notifications.map((n) => ({ ...n, lu: true }));
+        this.unreadCount = 0;
+      },
+      error: () => {
+        this.notifError = 'Impossible de marquer les notifications';
+      }
+    });
+  }
+
+  openAllNotifications(event: MouseEvent): void {
+    event.stopPropagation();
+    this.notifMenuOpen = false;
+    this.router.navigate(['/employe/notifications']);
+  }
+
+  get notificationPreview(): AppNotification[] {
+    return this.notifications.slice(0, 6);
+  }
+
+  private loadCurrentUser(): void {
+    this.userMeApi.me().subscribe({
+      next: (me) => {
+        const nom = (me.nom ?? '').trim();
+        const prenom = (me.prenom ?? '').trim();
+        const fullName = `${prenom} ${nom}`.trim();
+
+        this.userDisplayName = fullName || 'Mon compte';
+        this.userInitials = this.buildInitials(prenom, nom);
+      },
+      error: () => {
+        this.userDisplayName = 'Mon compte';
+        this.userInitials = 'MC';
+      }
+    });
+  }
+
+  private loadCurrentUserPhoto(): void {
+    this.userMeApi.getPhoto().subscribe({
+      next: (blob) => {
+        if (this.userPhotoUrl) {
+          URL.revokeObjectURL(this.userPhotoUrl);
+        }
+
+        this.userPhotoUrl = URL.createObjectURL(blob);
+      },
+      error: () => {
+        this.userPhotoUrl = null;
+      }
+    });
+  }
+
+  private buildInitials(prenom: string, nom: string): string {
+    const first = prenom.charAt(0).toUpperCase();
+    const last = nom.charAt(0).toUpperCase();
+    const initials = `${first}${last}`.trim();
+
+    return initials || 'MC';
   }
 
   logout() {

@@ -10,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-salles.html',
-  styleUrl: './admin-salles.scss'
+  styleUrl: './admin-salles.css'
 })
 export class AdminSallesComponent {
   private salleService = inject(SalleService);

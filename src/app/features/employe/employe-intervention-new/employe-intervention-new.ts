@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './employe-intervention-new.html',
-  styleUrl: './employe-intervention-new.scss'
+  styleUrl: './employe-intervention-new.css'
 })
 export class EmployeInterventionNewComponent {
   private fb = inject(FormBuilder);

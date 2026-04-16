@@ -60,6 +60,7 @@ export const routes: Routes = [
       { path: 'users', component: AdminUsersComponent },
       { path: 'evenements', component: AdminEvenementsComponent },
       { path: 'interventions/new', component: EmployeInterventionNewComponent },
+      { path: 'interventions', component: DsnInterventionsComponent },
       { path: 'services', component: AdminServicesComponent },
       { path: 'posts', component: AdminPostsComponent },
       { path: 'stock-en-panne', component: AdminStockPanneComponent },
@@ -202,7 +203,6 @@ export const routes: Routes = [
         ]
       },
       { path: 'interventions/new', component: EmployeInterventionNewComponent },
-      { path: 'interventions', component: DsnInterventionsComponent },
       { path: 'stock-en-panne', component: DsnStockPanneComponent },
       { path: 'documents/new', component: DsnDocumentNewComponent },
       { path: 'compte', component: EmployeCompteComponent }

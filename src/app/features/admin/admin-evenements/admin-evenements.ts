@@ -13,7 +13,7 @@ import { UserDto } from '../../../core/models/user';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './admin-evenements.html',
-  styleUrl: './admin-evenements.scss'
+  styleUrl: './admin-evenements.css'
 })
 export class AdminEvenementsComponent {
   private api = inject(EvenementService);

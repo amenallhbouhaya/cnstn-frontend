@@ -10,7 +10,7 @@ import { ChartConfiguration } from 'chart.js';
   standalone: true,
   imports: [CommonModule, RouterLink, BaseChartDirective],
   templateUrl: './admin-home.html',
-  styleUrl: './admin-home.scss'
+  styleUrl: './admin-home.css'
 })
 export class AdminHomeComponent implements OnInit {
   private dashApi = inject(AdminDashboardService);

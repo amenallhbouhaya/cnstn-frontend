@@ -10,7 +10,7 @@ import { InterventionApi, InterventionDto } from '../../../core/services/interve
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chef-interventions.html',
-  styleUrl: './chef-interventions.scss'
+  styleUrl: './chef-interventions.css'
 })
 export class ChefInterventionsComponent {
   private api = inject(InterventionApi);

@@ -8,7 +8,7 @@ import { UserMeApi } from '../../../core/services/user-me-api';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employe-compte.html',
-  styleUrl: './employe-compte.scss'
+  styleUrl: './employe-compte.css'
 })
 export class EmployeCompteComponent {
   private api = inject(UserMeApi);

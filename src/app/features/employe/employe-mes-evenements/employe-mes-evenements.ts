@@ -10,7 +10,7 @@ import { PLATFORM_ID } from '@angular/core';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './employe-mes-evenements.html',
-  styleUrl: './employe-mes-evenements.scss'
+  styleUrl: './employe-mes-evenements.css'
 })
 export class EmployeMesEvenementsComponent {
   private api = inject(EmployeEvenementApi);

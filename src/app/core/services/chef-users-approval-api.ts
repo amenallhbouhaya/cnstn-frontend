@@ -25,6 +25,6 @@ export class ChefUsersApprovalApi {
   }
 
   reject(id: number) {
-    return this.http.post<{ status: string }>(`${environment.apiUrl}/api/chef-hierarchique/users/${id}/reject`, {});
+    return this.http.post<{ status: string; message?: string }>(`${environment.apiUrl}/api/chef-hierarchique/users/${id}/reject`, {});
   }
 }

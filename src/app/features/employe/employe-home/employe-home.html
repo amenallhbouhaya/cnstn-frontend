@@ -1,68 +1,175 @@
-<div class="home">
-  <div class="home-header">
-    <h1>Bienvenue dans votre espace</h1>
-    <p>Accédez rapidement à vos différentes fonctionnalités</p>
-  </div>
+<div class="emp-page home-pro">
+  <section class="home-hero">
+    <div class="hero-content">
+      <span class="hero-kicker">Tableau de bord employe</span>
+      <h1>Bonjour {{ userFirstName }}, pilotez votre espace de travail</h1>
+      <p>
+        Vous avez {{ activeInterventionsCount }} intervention{{ activeInterventionsCount > 1 ? 's' : '' }} active{{ activeInterventionsCount > 1 ? 's' : '' }}
+        et {{ unreadNotificationsCount }} notification{{ unreadNotificationsCount > 1 ? 's' : '' }} non lue{{ unreadNotificationsCount > 1 ? 's' : '' }}.
+      </p>
 
-  <div class="quick-cards">
-    <a class="qcard" routerLink="/employe/evenements/new">
-      <div class="qcard-icon qcard-icon--green">
+      <div class="hero-actions">
+        <a class="hero-btn hero-btn--primary" routerLink="/employe/evenements/new">Créer un événement</a>
+        <a class="hero-btn hero-btn--ghost" routerLink="/employe/interventions/new">Demander intervention</a>
+        <a class="hero-btn hero-btn--ghost" routerLink="/employe/notifications">Voir notifications</a>
+      </div>
+    </div>
+
+    <div class="hero-stats" aria-label="Aperçu rapide">
+      <a
+        class="stat-tile"
+        *ngFor="let metric of metrics; trackBy: trackByMetric"
+        [routerLink]="metric.route">
+        <span class="stat-label">{{ metric.label }}</span>
+        <strong class="stat-value">{{ metric.value }}</strong>
+        <span class="stat-foot">{{ metric.hint }}</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="home-grid-pro" aria-label="Pilotage rapide">
+    <article class="home-panel">
+      <header class="panel-head">
+        <h2>Agenda proche</h2>
+        <a routerLink="/employe/evenements">Voir tout</a>
+      </header>
+
+      <div class="panel-loading" *ngIf="loading">Chargement de l'agenda...</div>
+
+      <div class="timeline" *ngIf="!loading && agenda.length > 0">
+        <a
+          class="timeline-item"
+          *ngFor="let item of agenda; trackBy: trackByAgenda"
+          [routerLink]="item.route">
+          <div class="timeline-date">
+            <strong>{{ item.date | date:'dd' }}</strong>
+            <span>{{ item.date | date:'MMM' }}</span>
+          </div>
+          <div class="timeline-body">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.meta }} | {{ item.date | date:'HH:mm' }}</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="panel-empty" *ngIf="!loading && agenda.length === 0">
+        Aucun evenement planifie prochainement.
+      </div>
+    </article>
+
+    <article class="home-panel">
+      <header class="panel-head">
+        <h2>Activite recente</h2>
+        <a routerLink="/employe/notifications">Centre notifications</a>
+      </header>
+
+      <div class="panel-loading" *ngIf="loading">Chargement de l'activite...</div>
+
+      <div class="activity-list" *ngIf="!loading && activities.length > 0">
+        <a
+          class="activity-item"
+          *ngFor="let item of activities; trackBy: trackByActivity"
+          [routerLink]="item.route">
+          <span class="activity-tag">{{ item.tag }}</span>
+          <div class="activity-body">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.date | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="panel-empty" *ngIf="!loading && activities.length === 0">
+        Aucune activite recente pour le moment.
+      </div>
+    </article>
+  </section>
+
+  <section class="workflow-strip" aria-label="Étapes de workflow">
+    <div class="workflow-step">
+      <span class="workflow-index">01</span>
+      <p>Initiez votre demande</p>
+    </div>
+    <div class="workflow-step">
+      <span class="workflow-index">02</span>
+      <p>Suivez son traitement</p>
+    </div>
+    <div class="workflow-step">
+      <span class="workflow-index">03</span>
+      <p>Validez et archivez</p>
+    </div>
+  </section>
+
+  <section class="quick-cards" aria-label="Actions rapides">
+    <a class="qcard qcard--green" routerLink="/employe/evenements/new">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Action</span>
         <h3>Créer un événement</h3>
-        <p>Planifier une réunion ou conférence</p>
+        <p>Planifier une réunion ou conférence en quelques clics.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="qcard" routerLink="/employe/evenements">
-      <div class="qcard-icon qcard-icon--blue">
+    <a class="qcard qcard--blue" routerLink="/employe/evenements">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Suivi</span>
         <h3>Mes événements</h3>
-        <p>Consulter vos événements planifiés</p>
+        <p>Consulter vos événements planifiés et leurs détails.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="qcard" routerLink="/employe/interventions/new">
-      <div class="qcard-icon qcard-icon--orange">
+    <a class="qcard qcard--orange" routerLink="/employe/interventions/new">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Support</span>
         <h3>Demander intervention</h3>
-        <p>Signaler un problème technique</p>
+        <p>Signaler un problème technique pour traitement rapide.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="qcard" routerLink="/employe/interventions">
-      <div class="qcard-icon qcard-icon--purple">
+    <a class="qcard qcard--cyan" routerLink="/employe/interventions">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Statut</span>
         <h3>Mes interventions</h3>
-        <p>Suivre vos demandes d'intervention</p>
+        <p>Suivre l’historique et l’avancement de vos demandes.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="qcard" routerLink="/employe/documents">
-      <div class="qcard-icon qcard-icon--teal">
+    <a class="qcard qcard--teal" routerLink="/employe/documents">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Ressources</span>
         <h3>Documents</h3>
-        <p>Accéder aux documents partagés</p>
+        <p>Accéder aux documents partagés et procédures utiles.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="qcard" routerLink="/employe/compte">
-      <div class="qcard-icon qcard-icon--gray">
+    <a class="qcard qcard--slate" routerLink="/employe/compte">
+      <div class="qcard-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
       <div class="qcard-body">
+        <span class="qcard-tag">Profil</span>
         <h3>Mon compte</h3>
-        <p>Gérer votre profil et mot de passe</p>
+        <p>Mettre à jour vos informations et votre sécurité.</p>
       </div>
+      <span class="qcard-arrow" aria-hidden="true">→</span>
     </a>
-  </div>
+  </section>
 </div>

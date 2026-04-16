@@ -12,7 +12,7 @@ import { PLATFORM_ID } from '@angular/core';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './dsn-evenements-pending.html',
-  styleUrl: './dsn-evenements-pending.scss'
+  styleUrl: './dsn-evenements-pending.css'
 })
 export class DsnEvenementsPendingComponent {
   private api = inject(EvenementApprovalApi);

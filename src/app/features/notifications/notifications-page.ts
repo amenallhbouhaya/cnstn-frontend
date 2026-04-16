@@ -11,7 +11,7 @@ import { AppNotification, NotificationsApi } from '../../core/services/notificat
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notifications-page.html',
-  styleUrl: './notifications-page.scss'
+  styleUrl: './notifications-page.css'
 })
 export class NotificationsPageComponent {
   private api = inject(NotificationsApi);

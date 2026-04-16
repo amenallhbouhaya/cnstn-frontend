@@ -1,6 +1,6 @@
 <div class="doc-page">
   <div class="doc-header">
-    <div>
+    <div class="doc-heading">
       <h1 class="doc-title">Créer un document</h1>
       <p class="doc-subtitle">Envoyer un document à tous les employés</p>
     </div>
@@ -14,17 +14,29 @@
     <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
       <div class="field">
         <label class="label">Titre du document *</label>
-        <input class="input" formControlName="titre" placeholder="Ex: Décision DSN" />
+        <input class="input" formControlName="titre" placeholder="Ex: Décision DSN" autocomplete="off" />
       </div>
 
       <div class="field">
         <label class="label">Niveau accès (optionnel)</label>
-        <input class="input" formControlName="niveauAcces" placeholder="Ex: Interne" />
+        <input class="input" formControlName="niveauAcces" placeholder="Ex: Interne" autocomplete="off" />
       </div>
 
-      <div class="field">
+      <div class="field file-field">
         <label class="label">Fichier *</label>
-        <input type="file" (change)="onFileSelected($event)" />
+        <label class="upload-zone" for="dsn-file-input">
+          <span class="upload-icon" aria-hidden="true">⇪</span>
+          <span class="upload-title">Choisir un fichier</span>
+          <span class="upload-subtitle">PDF, DOCX, XLSX ou image</span>
+          <span class="upload-filename" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+        </label>
+        <input
+          id="dsn-file-input"
+          class="file-input-native"
+          type="file"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+          (change)="onFileSelected($event)"
+        />
       </div>
 
       <div class="actions">

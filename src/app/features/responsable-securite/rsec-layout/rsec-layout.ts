@@ -12,7 +12,7 @@ import { catchError, startWith, switchMap, takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIf],
   templateUrl: './rsec-layout.html',
-  styleUrl: './rsec-layout.scss'
+  styleUrl: './rsec-layout.css'
 })
 export class RsecLayoutComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);

@@ -58,28 +58,48 @@ export class InterventionApi {
     });
   }
 
-  pendingDsn() {
-    return this.http.get<InterventionDto[]>(`${environment.apiUrl}/api/interventions/dsn/pending`);
+  pendingAdmin() {
+    return this.http.get<InterventionDto[]>(`${environment.apiUrl}/api/interventions/admin/pending`);
   }
 
-  startDsn(id: number, repairMode: string) {
-    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/dsn/${id}/start`, {
+  startAdmin(id: number, repairMode: string) {
+    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/start`, {
       repairMode
     });
   }
 
-  completeDsn(id: number, observation: string, dateReparation: string) {
-    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/dsn/${id}/complete`, {
+  completeAdmin(id: number, observation: string, dateReparation: string) {
+    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/complete`, {
       observation,
       dateReparation
     });
   }
 
+  repairAdmin(id: number) {
+    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/repair`, {});
+  }
+
+  brokenAdmin(id: number) {
+    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/broken`, {});
+  }
+
+  pendingDsn() {
+    return this.pendingAdmin();
+  }
+
+  startDsn(id: number, repairMode: string) {
+    return this.startAdmin(id, repairMode);
+  }
+
+  completeDsn(id: number, observation: string, dateReparation: string) {
+    return this.completeAdmin(id, observation, dateReparation);
+  }
+
   repairDsn(id: number) {
-    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/dsn/${id}/repair`, {});
+    return this.repairAdmin(id);
   }
 
   brokenDsn(id: number) {
-    return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/dsn/${id}/broken`, {});
+    return this.brokenAdmin(id);
   }
 }

@@ -10,7 +10,7 @@ import { InvitationsApi, InvitationView } from '../../core/services/invitations-
   standalone: true,
   imports: [CommonModule],
   templateUrl: './invitation-view.html',
-  styleUrl: './invitation-view.scss'
+  styleUrl: './invitation-view.css'
 })
 export class InvitationViewComponent {
   private api = inject(InvitationsApi);

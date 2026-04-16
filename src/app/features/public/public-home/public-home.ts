@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth';
 	standalone: true,
 	imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
 	templateUrl: './public-home.html',
-	styleUrl: './public-home.scss'
+	styleUrl: './public-home.css'
 })
 export class PublicHomeComponent {
 	private postsStore = inject(PublicPostsStore);

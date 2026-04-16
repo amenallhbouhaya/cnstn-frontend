@@ -9,14 +9,16 @@ import { StockEnPanneApi, StockEnPanneItem } from '../../../core/services/stock-
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin-stock-panne.html',
-  styleUrl: './admin-stock-panne.scss'
+  styleUrl: './admin-stock-panne.css'
 })
 export class AdminStockPanneComponent {
   private api = inject(StockEnPanneApi);
 
   items: StockEnPanneItem[] = [];
   loading = false;
+  processingId: number | null = null;
   errorMsg = '';
+  successMsg = '';
 
   ngOnInit() {
     this.load();
@@ -25,6 +27,7 @@ export class AdminStockPanneComponent {
   load() {
     this.loading = true;
     this.errorMsg = '';
+    this.successMsg = '';
 
     this.api.all()
       .pipe(finalize(() => this.loading = false))
@@ -33,6 +36,27 @@ export class AdminStockPanneComponent {
         error: (err) => {
           console.log(err);
           this.errorMsg = 'Erreur chargement stock en panne';
+        }
+      });
+  }
+
+  restore(item: StockEnPanneItem) {
+    if (!item?.id || this.processingId !== null) return;
+
+    this.processingId = item.id;
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    this.api.restore(item.id)
+      .pipe(finalize(() => this.processingId = null))
+      .subscribe({
+        next: (res) => {
+          this.successMsg = `Piece "${res.restoredNom}" restauree dans le stock.`;
+          this.items = this.items.filter(i => i.id !== item.id);
+        },
+        error: (err) => {
+          console.log(err);
+          this.errorMsg = 'Erreur restauration de la piece';
         }
       });
   }

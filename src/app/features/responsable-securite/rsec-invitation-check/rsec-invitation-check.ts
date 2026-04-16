@@ -10,7 +10,7 @@ import { InvitationsApi, InvitationView } from '../../../core/services/invitatio
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './rsec-invitation-check.html',
-  styleUrl: './rsec-invitation-check.scss'
+  styleUrl: './rsec-invitation-check.css'
 })
 export class RsecInvitationCheckComponent {
   private api = inject(InvitationsApi);

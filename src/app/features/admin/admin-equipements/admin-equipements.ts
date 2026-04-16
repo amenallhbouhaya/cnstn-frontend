@@ -10,7 +10,7 @@ import { Equipement } from '../../../core/models/equipement';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-equipements.html',
-  styleUrl: './admin-equipements.scss'
+  styleUrl: './admin-equipements.css'
 })
 export class AdminEquipementsComponent {
   private api = inject(EquipementService);

@@ -82,9 +82,18 @@
 	<div class="login-modal" *ngIf="showLoginModal" (click)="closeLoginModal()">
 		<section class="login-card" role="dialog" aria-modal="true" aria-label="Connexion" (click)="$event.stopPropagation()">
 			<button type="button" class="modal-close" aria-label="Fermer" (click)="closeLoginModal()">&times;</button>
-			<h2>{{ modalMode === 'login' ? 'Connexion' : 'Creer un compte' }}</h2>
-			<p *ngIf="modalMode === 'login'">Connectez-vous pour accéder à votre espace.</p>
-			<p *ngIf="modalMode === 'register'">Remplissez vos informations pour vous inscrire.</p>
+
+			<div class="login-brand">
+				<img src="cnstn-logo.png" alt="Logo CNSTN">
+				<div class="login-brand__text">
+					<span>Plateforme officielle</span>
+					<strong>CNSTN</strong>
+				</div>
+			</div>
+
+			<h2 class="login-title">{{ modalMode === 'login' ? 'Connexion' : 'Creer un compte' }}</h2>
+			<p class="login-subtitle" *ngIf="modalMode === 'login'">Connectez-vous pour acceder a votre espace.</p>
+			<p class="login-subtitle" *ngIf="modalMode === 'register'">Remplissez vos informations pour vous inscrire.</p>
 
 			<form class="login-form" *ngIf="modalMode === 'login'" [formGroup]="form" (ngSubmit)="submitLogin()">
 				<div class="form-row">

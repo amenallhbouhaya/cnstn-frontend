@@ -12,7 +12,7 @@ import { catchError, startWith, switchMap, takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIf],
   templateUrl: './dsn-layout.html',
-  styleUrl: './dsn-layout.scss'
+  styleUrl: './dsn-layout.css'
 })
 export class DsnLayoutComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);

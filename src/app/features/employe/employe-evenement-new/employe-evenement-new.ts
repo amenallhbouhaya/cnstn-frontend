@@ -26,7 +26,7 @@ interface ExternalPartnerDraft {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, FullCalendarModule],
   templateUrl: './employe-evenement-new.html',
-  styleUrl: './employe-evenement-new.scss'
+  styleUrl: './employe-evenement-new.css'
 })
 export class EmployeEvenementNewComponent {
   private api = inject(EmployeEvenementApi);

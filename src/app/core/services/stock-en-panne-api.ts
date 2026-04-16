@@ -11,11 +11,21 @@ export interface StockEnPanneItem {
   interventionId: number | null;
 }
 
+export interface RestoreStockEnPanneResponse {
+  status: string;
+  restoredEquipementId: number;
+  restoredNom: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class StockEnPanneApi {
   constructor(private http: HttpClient) {}
 
   all() {
     return this.http.get<StockEnPanneItem[]>(`${environment.apiUrl}/api/stock-en-panne`);
+  }
+
+  restore(id: number) {
+    return this.http.post<RestoreStockEnPanneResponse>(`${environment.apiUrl}/api/stock-en-panne/${id}/restore`, {});
   }
 }

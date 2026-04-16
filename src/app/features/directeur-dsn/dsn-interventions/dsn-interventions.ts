@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { InterventionApi, InterventionDto } from '../../../core/services/intervention-api';
+import { canAdminDecideIntervention, interventionStatusLabel } from '../../../core/models/intervention-status';
 
 @Component({
   selector: 'app-dsn-interventions',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './dsn-interventions.html',
-  styleUrl: './dsn-interventions.scss'
+  styleUrl: './dsn-interventions.css'
 })
 export class DsnInterventionsComponent {
   private api = inject(InterventionApi);
@@ -28,7 +29,7 @@ export class DsnInterventionsComponent {
     this.loading = true;
     this.errorMsg = '';
 
-    this.api.pendingDsn()
+    this.api.pendingAdmin()
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (data) => this.items = data ?? [],
@@ -40,7 +41,7 @@ export class DsnInterventionsComponent {
   }
 
   markRepaired(item: InterventionDto) {
-    this.api.repairDsn(item.id).subscribe({
+    this.api.repairAdmin(item.id).subscribe({
       next: () => this.load(),
       error: (err) => {
         console.log(err);
@@ -50,7 +51,7 @@ export class DsnInterventionsComponent {
   }
 
   markBroken(item: InterventionDto) {
-    this.api.brokenDsn(item.id).subscribe({
+    this.api.brokenAdmin(item.id).subscribe({
       next: () => this.load(),
       error: (err) => {
         console.log(err);
@@ -59,7 +60,11 @@ export class DsnInterventionsComponent {
     });
   }
 
+  statusLabel(status?: string | null) {
+    return interventionStatusLabel(status);
+  }
+
   canDecide(status?: string | null) {
-    return status === 'EN_ATTENTE_DSN' || status === 'EN_COURS';
+    return canAdminDecideIntervention(status);
   }
 }

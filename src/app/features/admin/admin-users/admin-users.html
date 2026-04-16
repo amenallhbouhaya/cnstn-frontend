@@ -6,6 +6,7 @@
     </div>
 
     <p class="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+    <p class="alert alert--success" *ngIf="successMsg">{{ successMsg }}</p>
 
     <div class="toolbar">
       <input class="input" placeholder="Nouveau role (ex: ChefProjet)" [(ngModel)]="newRole" />
@@ -23,6 +24,7 @@
             <th>Matricule</th>
             <th>Role</th>
             <th>Changer</th>
+            <th class="actions">Supprimer</th>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +37,9 @@
               <select class="input" [value]="u.role" (change)="changeRole(u, $any($event.target).value)">
                 <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
               </select>
+            </td>
+            <td class="actions">
+              <button type="button" class="btn btn--danger" (click)="deleteUser(u)">Supprimer</button>
             </td>
           </tr>
         </tbody>

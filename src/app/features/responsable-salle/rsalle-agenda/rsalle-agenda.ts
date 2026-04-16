@@ -1,20 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { finalize } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { PLATFORM_ID } from '@angular/core';
-
-interface EvenementAgendaDto {
-  id: number;
-  titre: string;
-  dateDebut: string;
-  dateFin: string;
-  typeEvenement: string;
-  statut: string;
-  salles: string[];
-  equipements: string[];
-}
+import { AgendaApi } from '../../../core/services/agenda-api';
+import { EvenementAgendaItem } from '../../../core/models/evenement-agenda';
 
 @Component({
   selector: 'app-rsalle-agenda',
@@ -23,10 +12,10 @@ interface EvenementAgendaDto {
   templateUrl: './rsalle-agenda.html'
 })
 export class RsalleAgendaComponent {
-  private http = inject(HttpClient);
+  private agendaApi = inject(AgendaApi);
   private platformId = inject(PLATFORM_ID);
 
-  items: EvenementAgendaDto[] = [];
+  items: EvenementAgendaItem[] = [];
   loading = false;
   errorMsg = '';
 
@@ -39,16 +28,14 @@ export class RsalleAgendaComponent {
     this.loading = true;
     this.errorMsg = '';
 
-    this.http.get<EvenementAgendaDto[]>(
-      `${environment.apiUrl}/api/responsable-salle/evenements/agenda`
-    )
-    .pipe(finalize(() => this.loading = false))
-    .subscribe({
-      next: data => this.items = data ?? [],
-      error: err => {
-        console.log(err);
-        this.errorMsg = 'Erreur chargement agenda';
-      }
-    });
+    this.agendaApi.responsableSalleAgenda()
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: data => this.items = data ?? [],
+        error: err => {
+          console.log(err);
+          this.errorMsg = 'Erreur chargement agenda';
+        }
+      });
   }
 }

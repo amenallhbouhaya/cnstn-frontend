@@ -10,7 +10,7 @@ import { ServiceItem } from '../../../core/models/service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-services.html',
-  styleUrl: './admin-services.scss'
+  styleUrl: './admin-services.css'
 })
 export class AdminServicesComponent {
   private api = inject(ServicesApi);

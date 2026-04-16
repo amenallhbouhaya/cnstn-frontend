@@ -12,7 +12,7 @@ import { NotificationsApi } from '../../../core/services/notifications';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIf],
   templateUrl: './chef-layout.html',
-  styleUrl: './chef-layout.scss'
+  styleUrl: './chef-layout.css'
 })
 export class ChefLayoutComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);

@@ -10,7 +10,7 @@ import { DocumentItem } from '../../../core/models/document';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './employe-documents.html',
-  styleUrl: './employe-documents.scss'
+  styleUrl: './employe-documents.css'
 })
 export class EmployeDocumentsComponent {
   private api = inject(DocumentApi);

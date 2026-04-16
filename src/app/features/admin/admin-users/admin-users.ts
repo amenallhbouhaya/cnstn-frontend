@@ -9,7 +9,7 @@ import { UserDto } from '../../../core/models/user';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-users.html',
-  styleUrl: './admin-users.scss'
+  styleUrl: './admin-users.css'
 })
 export class AdminUsersComponent {
   private api = inject(AdminUsersService);
@@ -20,6 +20,7 @@ export class AdminUsersComponent {
   newRole = '';
   loading = false;
   errorMsg = '';
+  successMsg = '';
 
   ngOnInit() {
     this.loadRoles();
@@ -29,6 +30,7 @@ export class AdminUsersComponent {
   loadUsers() {
     this.loading = true;
     this.errorMsg = '';
+    this.successMsg = '';
 
     this.api.getAll().subscribe({
       next: (data) => {
@@ -65,10 +67,12 @@ export class AdminUsersComponent {
       return;
     }
 
+    this.successMsg = '';
     this.api.createRole(roleName).subscribe({
       next: () => {
         this.newRole = '';
         this.errorMsg = '';
+        this.successMsg = 'Role ajoute avec succes.';
         this.loadRoles();
       },
       error: (err) => {
@@ -78,12 +82,34 @@ export class AdminUsersComponent {
   }
 
   changeRole(u: UserDto, roleValue: string) {
+    this.successMsg = '';
     this.api.updateRole(u.id, roleValue).subscribe({
       next: (updated) => {
         u.role = updated.role;
+        this.errorMsg = '';
+        this.successMsg = 'Role utilisateur mis a jour.';
         this.cdr.detectChanges();
       },
       error: () => (this.errorMsg = 'Erreur changement role')
+    });
+  }
+
+  deleteUser(u: UserDto) {
+    const confirmed = window.confirm(`Supprimer l'utilisateur ${u.nom} ${u.prenom} ?`);
+    if (!confirmed) return;
+
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    this.api.deleteUser(u.id).subscribe({
+      next: (res) => {
+        this.users = this.users.filter((item) => item.id !== u.id);
+        this.successMsg = res?.message ?? 'Utilisateur supprime avec succes.';
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMsg = err?.error?.message ?? 'Erreur suppression utilisateur';
+      }
     });
   }
 }

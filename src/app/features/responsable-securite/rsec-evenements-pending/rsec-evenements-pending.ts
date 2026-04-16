@@ -12,7 +12,7 @@ import { EvenementApprovalApi, EvenementWorkflow } from '../../../core/services/
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './rsec-evenements-pending.html',
-  styleUrl: './rsec-evenements-pending.scss'
+  styleUrl: './rsec-evenements-pending.css'
 })
 export class RsecEvenementsPendingComponent {
   private api = inject(EvenementApprovalApi);

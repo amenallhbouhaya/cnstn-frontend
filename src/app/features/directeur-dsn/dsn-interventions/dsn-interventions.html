@@ -1,8 +1,8 @@
 <div class="card">
   <div class="page-head">
     <div>
-      <h2 class="page-title">Interventions DSN</h2>
-      <p class="page-subtitle">Decisions et suivi des reparations</p>
+      <h2 class="page-title">Interventions en attente Admin</h2>
+      <p class="page-subtitle">Validation admin et suivi des reparations</p>
     </div>
     <button class="btn btn-outline" type="button" (click)="load()">Rafraichir</button>
   </div>
@@ -26,7 +26,7 @@
           <td>{{ i.demandeurNom }} {{ i.demandeurPrenom }}</td>
           <td>{{ i.typeAppareil || '-' }}</td>
           <td>{{ i.numeroSerie || '-' }}</td>
-          <td>{{ i.statut }}</td>
+          <td>{{ statusLabel(i.statut) }}</td>
           <td>
             <div class="actions" *ngIf="canDecide(i.statut)">
               <button class="btn btn-small btn-primary" type="button" (click)="markRepaired(i)">Marquer repare</button>

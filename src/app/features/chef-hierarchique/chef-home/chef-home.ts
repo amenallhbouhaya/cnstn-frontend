@@ -7,6 +7,6 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './chef-home.html',
-  styleUrl: './chef-home.scss'
+  styleUrl: './chef-home.css'
 })
 export class ChefHomeComponent {}

@@ -9,7 +9,7 @@ import { StockEnPanneApi, StockEnPanneItem } from '../../../core/services/stock-
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dsn-stock-panne.html',
-  styleUrl: './dsn-stock-panne.scss'
+  styleUrl: './dsn-stock-panne.css'
 })
 export class DsnStockPanneComponent {
   private api = inject(StockEnPanneApi);

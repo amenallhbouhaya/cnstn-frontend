@@ -9,7 +9,7 @@ import { PublicPostsStore } from '../../../core/services/public-posts-store';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-posts.html',
-  styleUrl: './admin-posts.scss'
+  styleUrl: './admin-posts.css'
 })
 export class AdminPostsComponent {
   private fb = inject(FormBuilder);

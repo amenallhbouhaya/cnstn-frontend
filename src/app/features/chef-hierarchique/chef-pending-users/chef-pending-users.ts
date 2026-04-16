@@ -9,7 +9,7 @@ import { ChefUsersApprovalApi, PendingRegistration } from '../../../core/service
   standalone: true,
   imports: [CommonModule],
   templateUrl: './chef-pending-users.html',
-  styleUrl: './chef-pending-users.scss'
+  styleUrl: './chef-pending-users.css'
 })
 export class ChefPendingUsersComponent implements OnInit {
   private api = inject(ChefUsersApprovalApi);
@@ -23,10 +23,12 @@ export class ChefPendingUsersComponent implements OnInit {
     this.load();
   }
 
-  load() {
+  load(resetMessages: boolean = true) {
     this.loading = true;
-    this.errorMsg = '';
-    this.successMsg = '';
+    if (resetMessages) {
+      this.errorMsg = '';
+      this.successMsg = '';
+    }
 
     this.api.pending()
       .pipe(finalize(() => this.loading = false))
@@ -40,9 +42,9 @@ export class ChefPendingUsersComponent implements OnInit {
     this.errorMsg = '';
     this.successMsg = '';
     this.api.accept(id).subscribe({
-      next: () => {
-        this.successMsg = 'Compte accepté et créé avec le rôle Employe.';
-        this.load();
+      next: (res) => {
+        this.successMsg = res?.message ?? 'Compte accepte et cree avec le role Employe.';
+        this.load(false);
       },
       error: (err) => this.errorMsg = err?.error?.message ?? 'Erreur pendant l’acceptation du compte.'
     });
@@ -52,9 +54,9 @@ export class ChefPendingUsersComponent implements OnInit {
     this.errorMsg = '';
     this.successMsg = '';
     this.api.reject(id).subscribe({
-      next: () => {
-        this.successMsg = 'Demande refusée.';
-        this.load();
+      next: (res) => {
+        this.successMsg = res?.message ?? 'Demande refusee.';
+        this.load(false);
       },
       error: (err) => this.errorMsg = err?.error?.message ?? 'Erreur pendant le refus du compte.'
     });

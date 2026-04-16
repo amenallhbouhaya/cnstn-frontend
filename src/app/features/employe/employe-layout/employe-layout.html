@@ -1,5 +1,4 @@
 <div class="shell">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <img class="sidebar-logo" src="cnstn-logo.png" alt="CNSTN">
@@ -7,6 +6,7 @@
         <span class="sidebar-title">CNSTN</span>
         <span class="sidebar-role">Employé</span>
       </div>
+      <span class="sidebar-brand-pill">PRO</span>
     </div>
 
     <nav class="sidebar-nav">
@@ -58,12 +58,72 @@
     </button>
   </aside>
 
-  <!-- Main content -->
   <section class="main">
     <header class="topbar">
-      <div>
-        <strong>Espace Employé</strong>
-        <p>Gestion des événements, interventions et documents</p>
+      <div class="topbar-shell">
+        <div class="topbar-intro">
+          <a class="topbar-identity" routerLink="/employe/compte" aria-label="Aller au compte">
+            <span class="topbar-identity__avatar" *ngIf="!userPhotoUrl">{{ userInitials }}</span>
+            <img class="topbar-identity__photo" *ngIf="userPhotoUrl" [src]="userPhotoUrl" alt="Photo profil">
+            <span class="topbar-identity__text">
+              <strong>{{ userDisplayName }}</strong>
+              <p>Espace Employé</p>
+            </span>
+          </a>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="notif-wrapper" #notifWrapper>
+            <button
+              class="notif-trigger"
+              type="button"
+              (click)="toggleNotifications($event)"
+              [attr.aria-expanded]="notifMenuOpen"
+              aria-haspopup="true"
+              aria-label="Ouvrir notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notif-trigger__badge" *ngIf="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+            </button>
+
+            <div class="notif-menu" *ngIf="notifMenuOpen">
+              <div class="notif-menu__head">
+                <strong>Notifications</strong>
+                <button
+                  class="notif-menu__mark"
+                  type="button"
+                  *ngIf="unreadCount > 0"
+                  (click)="markAllNotificationsRead($event)">
+                  Tout lire
+                </button>
+              </div>
+
+              <div class="notif-menu__state" *ngIf="notifLoading">Chargement...</div>
+              <div class="notif-menu__state notif-menu__state--error" *ngIf="!notifLoading && notifError">{{ notifError }}</div>
+
+              <div class="notif-menu__list" *ngIf="!notifLoading && !notifError && notificationPreview.length > 0">
+                <button
+                  class="notif-item"
+                  type="button"
+                  *ngFor="let n of notificationPreview"
+                  [class.notif-item--unread]="!n.lu"
+                  (click)="openNotification(n)">
+                  <div class="notif-item__message">{{ n.message }}</div>
+                  <div class="notif-item__meta">{{ n.dateCreation | date:'dd/MM HH:mm' }}</div>
+                </button>
+              </div>
+
+              <div class="notif-menu__state" *ngIf="!notifLoading && !notifError && notificationPreview.length === 0">
+                Pas de notifications.
+              </div>
+
+              <button class="notif-menu__all" type="button" (click)="openAllNotifications($event)">
+                Voir toutes les notifications
+              </button>
+            </div>
+          </div>
+
+          <a class="topbar-btn" routerLink="/employe/evenements/new">Nouveau événement</a>
+        </div>
       </div>
     </header>
 
