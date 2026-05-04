@@ -343,6 +343,18 @@
   margin-top: 8px;
 }
 
+.forgot-link-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgot-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .form-row {
   display: grid;
   gap: 6px;

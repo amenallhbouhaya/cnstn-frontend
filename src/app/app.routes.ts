@@ -6,6 +6,7 @@ import { AdminHomeComponent } from './features/admin/admin-home/admin-home';
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout';
 import { AdminSallesComponent } from './features/admin/admin-salles/admin-salles';
 import { AdminUsersComponent } from './features/admin/admin-users/admin-users';
+import { AdminPendingUsersComponent } from './features/admin/admin-pending-users/admin-pending-users';
 import { AdminEquipementsComponent } from './features/admin/admin-equipements/admin-equipements';
 import { AdminEvenementsComponent } from './features/admin/admin-evenements/admin-evenements';
 import { AdminServicesComponent } from './features/admin/admin-services/admin-services';
@@ -39,7 +40,6 @@ import { ChefHomeComponent } from './features/chef-hierarchique/chef-home/chef-h
 import { ChefPendingUsersComponent } from './features/chef-hierarchique/chef-pending-users/chef-pending-users';
 import { ChefInterventionsComponent } from './features/chef-hierarchique/chef-interventions/chef-interventions';
 import { DsnInterventionsComponent } from './features/directeur-dsn/dsn-interventions/dsn-interventions';
-import { DsnStockPanneComponent } from './features/directeur-dsn/dsn-stock-panne/dsn-stock-panne';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
@@ -58,6 +58,7 @@ export const routes: Routes = [
       { path: 'salles', component: AdminSallesComponent },
       { path: 'equipements', component: AdminEquipementsComponent },
       { path: 'users', component: AdminUsersComponent },
+      { path: 'comptes-en-attente', component: AdminPendingUsersComponent },
       { path: 'evenements', component: AdminEvenementsComponent },
       { path: 'interventions/new', component: EmployeInterventionNewComponent },
       { path: 'interventions', component: DsnInterventionsComponent },
@@ -203,7 +204,6 @@ export const routes: Routes = [
         ]
       },
       { path: 'interventions/new', component: EmployeInterventionNewComponent },
-      { path: 'stock-en-panne', component: DsnStockPanneComponent },
       { path: 'documents/new', component: DsnDocumentNewComponent },
       { path: 'compte', component: EmployeCompteComponent }
     ]

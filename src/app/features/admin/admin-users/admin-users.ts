@@ -34,7 +34,11 @@ export class AdminUsersComponent {
 
     this.api.getAll().subscribe({
       next: (data) => {
-        this.users = data;
+        this.users = (data ?? []).map((user) => ({
+          ...user,
+          role: user.role ? user.role.trim() : user.role
+        }));
+        this.syncRolesWithUsers();
         this.loading = false;
         this.cdr.detectChanges(); // ✅ مهمّة
         console.log('users loaded', data.length);
@@ -51,7 +55,10 @@ export class AdminUsersComponent {
   loadRoles() {
     this.api.getRoles().subscribe({
       next: (data) => {
-        this.roles = data ?? [];
+        this.roles = (data ?? [])
+          .map((role) => (role ? role.trim() : role))
+          .filter((role): role is string => !!role);
+        this.syncRolesWithUsers();
         this.cdr.detectChanges();
       },
       error: () => {
@@ -82,8 +89,13 @@ export class AdminUsersComponent {
   }
 
   changeRole(u: UserDto, roleValue: string) {
+    const normalizedRole = roleValue?.trim() ?? '';
+    if (!normalizedRole || normalizedRole === u.role) {
+      return;
+    }
+
     this.successMsg = '';
-    this.api.updateRole(u.id, roleValue).subscribe({
+    this.api.updateRole(u.id, normalizedRole).subscribe({
       next: (updated) => {
         u.role = updated.role;
         this.errorMsg = '';
@@ -111,5 +123,20 @@ export class AdminUsersComponent {
         this.errorMsg = err?.error?.message ?? 'Erreur suppression utilisateur';
       }
     });
+  }
+
+  private syncRolesWithUsers() {
+    const roleSet = new Set(
+      (this.roles ?? []).map((role) => (role ? role.trim() : role)).filter((role): role is string => !!role)
+    );
+
+    for (const user of this.users ?? []) {
+      const role = user.role ? user.role.trim() : '';
+      if (role) {
+        roleSet.add(role);
+      }
+    }
+
+    this.roles = Array.from(roleSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   }
 }

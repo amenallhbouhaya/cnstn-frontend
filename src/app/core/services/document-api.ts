@@ -5,18 +5,21 @@ import { DocumentItem } from '../models/document';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentApi {
+  private readonly baseUrl = `${environment.apiUrl}/api/documents`;
+
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<DocumentItem[]>(`${environment.apiUrl}/Document/all`);
+    return this.http.get<DocumentItem[]>(this.baseUrl);
   }
+
   myDocs() {
-    return this.http.get<DocumentItem[]>(`${environment.apiUrl}/Document/me`);
+    return this.http.get<DocumentItem[]>(`${this.baseUrl}/me`);
   }
 
   // ✅ download (blob)
   download(id: number) {
-    return this.http.get(`${environment.apiUrl}/Document/${id}/download`, {
+    return this.http.get(`${this.baseUrl}/${id}/download`, {
       responseType: 'blob'
     });
   }

@@ -21,7 +21,7 @@
           <tr>
             <th>Nom</th>
             <th>Email</th>
-            <th>Matricule</th>
+            <th>CIN</th>
             <th>Role</th>
             <th>Changer</th>
             <th class="actions">Supprimer</th>
@@ -34,8 +34,8 @@
             <td>{{ u.matricule }}</td>
             <td>{{ u.role }}</td>
             <td>
-              <select class="input" [value]="u.role" (change)="changeRole(u, $any($event.target).value)">
-                <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+              <select class="input" [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)">
+                <option *ngFor="let r of roles" [ngValue]="r">{{ r }}</option>
               </select>
             </td>
             <td class="actions">

@@ -7,9 +7,24 @@
 }
 
 .compte-page {
+  --ink: #1d1f2a;
+  --muted: #646b80;
+  --accent: #0f6d6a;
+  --accent-deep: #0a5956;
+  --paper: #ffffff;
+  --line: #e2e6f0;
+  --soft: #f3f6fb;
+  --shadow: 0 18px 40px rgba(12, 19, 36, 0.08);
+  --shadow-strong: 0 22px 48px rgba(12, 19, 36, 0.12);
   min-height: 100vh;
-  padding: 32px 24px 48px;
-  background: var(--bg);
+  padding: 32px 24px 52px;
+  background-color: #f5f6f8;
+  background-image:
+    linear-gradient(180deg, #f7f8fb 0%, #f2f5fa 100%),
+    repeating-linear-gradient(90deg, rgba(15, 109, 106, 0.05) 0, rgba(15, 109, 106, 0.05) 1px, transparent 1px, transparent 120px),
+    repeating-linear-gradient(0deg, rgba(15, 109, 106, 0.04) 0, rgba(15, 109, 106, 0.04) 1px, transparent 1px, transparent 120px);
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Gill Sans", Tahoma, Verdana, sans-serif;
 }
 
 /* ── Loading ── */
@@ -27,8 +42,8 @@
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary);
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -40,21 +55,35 @@
 }
 /* ── Content wrapper ── */
 .compte-content {
-  max-width: 960px;
+  max-width: 980px;
   margin: 0 auto;
 }
 
 /* ── Page header ── */
 .page-header {
-  margin-bottom: 28px;
+  margin-bottom: 22px;
+  padding: 12px 0 14px;
+  border-bottom: 1px solid var(--line);
+  animation: fade-rise 0.4s ease both;
 }
 
 .page-title {
   margin: 0 0 6px;
   font-size: 28px;
   font-weight: 800;
-  color: var(--primary);
-  letter-spacing: 0.2px;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+  font-family: "Palatino Linotype", "Trebuchet MS", "Gill Sans", Tahoma, sans-serif;
+}
+
+.page-title::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 10px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 .page-subtitle {
@@ -73,43 +102,46 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 20px;
-  animation: slideIn 0.25s ease-out;
+  animation: fade-rise 0.35s ease both;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 .alert--success {
-  background: rgba(46, 125, 50, 0.08);
-  color: var(--accent-green);
-  border: 1px solid rgba(46, 125, 50, 0.18);
+  background: #edf8f3;
+  color: #1c6b49;
+  border: 1px solid #cfe9dd;
 }
 
 .alert--error {
-  background: rgba(204, 34, 34, 0.08);
-  color: var(--danger);
-  border: 1px solid rgba(204, 34, 34, 0.18);
+  background: #fdeeee;
+  color: #b13a3a;
+  border: 1px solid #f2c9c9;
 }
 
 /* ── Cards ── */
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 24px;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
+  animation: fade-rise 0.45s ease both;
 }
 
 .card:hover {
-  box-shadow: 0 20px 56px rgba(27, 42, 107, 0.1);
+  box-shadow: var(--shadow-strong);
+  transform: translateY(-2px);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
 }
 
 .card__header {
@@ -118,11 +150,11 @@
   gap: 10px;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 
 .card__icon {
-  color: var(--primary);
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -130,21 +162,21 @@
   margin: 0;
   font-size: 17px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--ink);
 }
 
 /* ── Grid layouts ── */
 .compte-grid-top {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
   margin-bottom: 20px;
 }
 
 .compte-grid-bottom {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 18px;
 }
 
 /* ── Info card ── */
@@ -158,6 +190,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--soft);
+  border: 1px solid var(--line);
 }
 
 .info-label {
@@ -171,28 +207,29 @@
 .info-value {
   font-size: 15px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--ink);
   word-break: break-all;
 }
 
 .info-badge {
   display: inline-block;
   width: fit-content;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  background: var(--primary-light);
-  color: var(--primary);
+  background: rgba(15, 109, 106, 0.12);
+  color: var(--accent);
 }
 
 /* ── Photo card ── */
 .photo-area {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 24px;
+  gap: 18px;
 }
 
 .photo-wrapper {
@@ -204,19 +241,19 @@
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--border);
-  box-shadow: 0 4px 16px rgba(27, 42, 107, 0.08);
+  border: 2px solid var(--line);
+  box-shadow: 0 6px 14px rgba(27, 42, 107, 0.12);
 }
 
 .photo-placeholder {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  border: 2px dashed var(--border);
+  border: 2px dashed var(--line);
   display: grid;
   place-items: center;
   color: var(--muted);
-  background: var(--bg);
+  background: #f4f6fb;
 }
 
 .photo-actions {
@@ -231,6 +268,7 @@
   gap: 8px;
   cursor: pointer;
   font-size: 13px;
+  box-shadow: none;
 }
 
 .photo-hint {
@@ -260,24 +298,24 @@
 .field__label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .field__input {
   width: 100%;
   padding: 11px 14px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--line);
   border-radius: 10px;
   background: #fff;
   font-size: 14px;
-  color: var(--text);
+  color: var(--ink);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field__input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(27, 42, 107, 0.08);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 109, 106, 0.12);
 }
 
 .field__input::placeholder {
@@ -302,7 +340,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.05s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.08s;
 }
 
 .btn:active {
@@ -310,23 +348,23 @@
 }
 
 .btn--primary {
-  background: var(--primary);
+  background: var(--accent);
   color: #fff;
 }
 
 .btn--primary:hover {
-  background: var(--primary-2);
-  box-shadow: 0 4px 14px rgba(27, 42, 107, 0.22);
+  background: var(--accent-deep);
+  box-shadow: 0 8px 18px rgba(15, 109, 106, 0.22);
 }
 
 .btn--outline {
   background: #fff;
-  color: var(--primary);
-  border: 1.5px solid var(--primary);
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
 }
 
 .btn--outline:hover {
-  background: var(--primary-light);
+  background: rgba(15, 109, 106, 0.08);
 }
 
 .btn--sm {
@@ -336,15 +374,18 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .compte-page {
-    padding: 20px 14px 36px;
-  }
-  .page-title {
-    font-size: 22px;
-  }
   .compte-grid-top,
   .compte-grid-bottom {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .compte-page {
+    padding: 18px 14px 36px;
+  }
+  .page-title {
+    font-size: 22px;
   }
   .form-grid-2 {
     grid-template-columns: 1fr;
@@ -353,7 +394,7 @@
     grid-template-columns: 1fr;
   }
   .photo-area {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: flex-start;
   }
   .form-actions {
@@ -361,5 +402,32 @@
   }
   .form-actions .btn {
     width: 100%;
+  }
+}
+
+.compte-grid-top .card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.compte-grid-top .card:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.compte-grid-bottom .card:nth-child(1) {
+  animation-delay: 0.18s;
+}
+
+.compte-grid-bottom .card:nth-child(2) {
+  animation-delay: 0.24s;
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

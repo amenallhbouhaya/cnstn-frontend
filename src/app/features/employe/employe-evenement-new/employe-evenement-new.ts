@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angu
 import { Router, RouterLink } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DayCellMountArg } from '@fullcalendar/core';
+import frLocale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 
@@ -102,12 +103,17 @@ export class EmployeEvenementNewComponent {
       plugins: [dayGridPlugin, interactionPlugin],
       initialView: 'dayGridMonth',
       initialDate: this.toDateInput(nextMonthStart),
+      locale: frLocale,
+      firstDay: 1,
       height: 'auto',
       fixedWeekCount: false,
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: ''
+      },
+      buttonText: {
+        today: "Aujourd'hui"
       },
       validRange: {
         start: rangeStart

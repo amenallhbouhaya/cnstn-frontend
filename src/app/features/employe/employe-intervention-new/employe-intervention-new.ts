@@ -51,7 +51,7 @@ export class EmployeInterventionNewComponent {
   });
 
   ngOnInit() {
-    // controller متاعك GET /Equipement
+    // lit la liste via core service (/api/equipements)
     this.equipApi.getAll().subscribe({
       next: (data: any) => this.equipements = data ?? [],
       error: (err) => console.log(err)

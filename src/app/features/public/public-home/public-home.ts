@@ -23,7 +23,7 @@ export class PublicHomeComponent {
 
 	readonly year = new Date().getFullYear();
 	showLoginModal = false;
-	modalMode: 'login' | 'register' = 'login';
+	modalMode: 'login' | 'register' | 'forgot-password' = 'login';
 	errorMsg = '';
 	registerErrorMsg = '';
 	registerSuccessMsg = '';
@@ -33,6 +33,10 @@ export class PublicHomeComponent {
 	verificationCode = '';
 	verificationEmail = '';
 	awaitingEmailVerification = false;
+	forgotErrorMsg = '';
+	forgotSuccessMsg = '';
+	awaitingPasswordResetCode = false;
+	passwordResetEmail = '';
 
 	form = this.fb.group({
 		email: ['', [Validators.required, Validators.email]],
@@ -48,6 +52,15 @@ export class PublicHomeComponent {
 		telephone: [null as number | null, Validators.required]
 	});
 
+	forgotRequestForm = this.fb.group({
+		email: ['', [Validators.required, Validators.email]]
+	});
+
+	forgotResetForm = this.fb.group({
+		code: ['', Validators.required],
+		newPassword: ['', [Validators.required, Validators.minLength(6)]]
+	});
+
 	get news(): PublicPost[] {
 		return this.postsStore.posts();
 	}
@@ -59,6 +72,7 @@ export class PublicHomeComponent {
 		this.registerErrorMsg = '';
 		this.registerSuccessMsg = '';
 		this.resetVerificationState();
+		this.resetForgotPasswordState();
 	}
 
 	openRegisterModal(): void {
@@ -68,6 +82,7 @@ export class PublicHomeComponent {
 		this.registerErrorMsg = '';
 		this.registerSuccessMsg = '';
 		this.resetVerificationState();
+		this.resetForgotPasswordState();
 	}
 
 	closeLoginModal(): void {
@@ -77,11 +92,13 @@ export class PublicHomeComponent {
 		this.registerErrorMsg = '';
 		this.registerSuccessMsg = '';
 		this.resetVerificationState();
+		this.resetForgotPasswordState();
 	}
 
 	switchToLogin(): void {
 		this.modalMode = 'login';
 		this.errorMsg = '';
+		this.resetForgotPasswordState();
 	}
 
 	switchToRegister(): void {
@@ -89,6 +106,21 @@ export class PublicHomeComponent {
 		this.registerErrorMsg = '';
 		this.registerSuccessMsg = '';
 		this.resetVerificationState();
+		this.resetForgotPasswordState();
+	}
+
+	switchToForgotPassword(): void {
+		this.modalMode = 'forgot-password';
+		this.errorMsg = '';
+		this.registerErrorMsg = '';
+		this.registerSuccessMsg = '';
+		this.resetVerificationState();
+		this.resetForgotPasswordState();
+
+		const currentLoginEmail = String(this.form.value.email ?? '').trim();
+		if (currentLoginEmail) {
+			this.forgotRequestForm.patchValue({ email: currentLoginEmail });
+		}
 	}
 
 	submitLogin(): void {
@@ -197,6 +229,89 @@ export class PublicHomeComponent {
 				this.verifyErrorMsg = err?.error?.message ?? 'Echec renvoi code';
 			}
 		});
+	}
+
+	requestPasswordResetCode(): void {
+		if (this.forgotRequestForm.invalid) {
+			this.forgotRequestForm.markAllAsTouched();
+			return;
+		}
+
+		this.forgotErrorMsg = '';
+		this.forgotSuccessMsg = '';
+
+		const email = String(this.forgotRequestForm.value.email ?? '').trim().toLowerCase();
+		this.auth.forgotPassword({ email }).subscribe({
+			next: (res) => {
+				this.awaitingPasswordResetCode = true;
+				this.passwordResetEmail = String(res?.email ?? email).trim().toLowerCase();
+				this.forgotSuccessMsg = res?.message ?? 'Code de reinitialisation envoye par email.';
+				this.forgotResetForm.reset();
+			},
+			error: (err) => {
+				this.forgotErrorMsg = err?.error?.message ?? 'Echec envoi code';
+			}
+		});
+	}
+
+	submitPasswordReset(): void {
+		if (!this.awaitingPasswordResetCode) {
+			this.requestPasswordResetCode();
+			return;
+		}
+
+		if (this.forgotResetForm.invalid) {
+			this.forgotResetForm.markAllAsTouched();
+			return;
+		}
+
+		this.forgotErrorMsg = '';
+		this.forgotSuccessMsg = '';
+
+		const code = String(this.forgotResetForm.value.code ?? '').trim();
+		const newPassword = String(this.forgotResetForm.value.newPassword ?? '').trim();
+		this.auth.resetPassword({
+			email: this.passwordResetEmail,
+			code,
+			newPassword
+		}).subscribe({
+			next: (res) => {
+				this.forgotSuccessMsg = res?.message ?? 'Mot de passe reinitialise avec succes.';
+				this.awaitingPasswordResetCode = false;
+				this.forgotResetForm.reset();
+			},
+			error: (err) => {
+				this.forgotErrorMsg = err?.error?.message ?? 'Echec reinitialisation mot de passe';
+			}
+		});
+	}
+
+	resendPasswordResetCode(): void {
+		if (!this.passwordResetEmail) {
+			this.forgotErrorMsg = 'Email introuvable pour renvoi du code';
+			return;
+		}
+
+		this.forgotErrorMsg = '';
+		this.forgotSuccessMsg = '';
+
+		this.auth.forgotPassword({ email: this.passwordResetEmail }).subscribe({
+			next: (res) => {
+				this.forgotSuccessMsg = res?.message ?? 'Code de reinitialisation renvoye par email.';
+			},
+			error: (err) => {
+				this.forgotErrorMsg = err?.error?.message ?? 'Echec renvoi code';
+			}
+		});
+	}
+
+	private resetForgotPasswordState(): void {
+		this.awaitingPasswordResetCode = false;
+		this.passwordResetEmail = '';
+		this.forgotErrorMsg = '';
+		this.forgotSuccessMsg = '';
+		this.forgotRequestForm.reset();
+		this.forgotResetForm.reset();
 	}
 
 	private resetVerificationState(): void {

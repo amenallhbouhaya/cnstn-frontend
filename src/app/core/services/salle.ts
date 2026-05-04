@@ -5,21 +5,23 @@ import { Salle } from '../models/salle';
 
 @Injectable({ providedIn: 'root' })
 export class SalleService {
+  private readonly baseUrl = `${environment.apiUrl}/api/salles`;
+
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Salle[]>(`${environment.apiUrl}/Salle/all`);
+    return this.http.get<Salle[]>(this.baseUrl);
   }
 
   add(body: Salle) {
-    return this.http.post<Salle>(`${environment.apiUrl}/Salle/add`, body);
+    return this.http.post<Salle>(this.baseUrl, body);
   }
 
   update(id: number, body: Salle) {
-    return this.http.put<Salle>(`${environment.apiUrl}/Salle/${id}`, body);
+    return this.http.put<Salle>(`${this.baseUrl}/${id}`, body);
   }
 
   delete(id: number) {
-  return this.http.delete(`${environment.apiUrl}/Salle/${id}`, { responseType: 'text' });
-}
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
 }

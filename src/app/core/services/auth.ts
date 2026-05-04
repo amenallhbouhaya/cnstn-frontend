@@ -3,8 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import {
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   RegisterRequest,
   RegisterResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
   ResendRegisterCodeRequest,
   ResendRegisterCodeResponse,
   VerifyRegisterCodeRequest,
@@ -42,6 +46,14 @@ export class AuthService {
 
   resendRegisterCode(body: ResendRegisterCodeRequest) {
     return this.http.post<ResendRegisterCodeResponse>(`${environment.apiUrl}/api/auth/register/resend`, body);
+  }
+
+  forgotPassword(body: ForgotPasswordRequest) {
+    return this.http.post<ForgotPasswordResponse>(`${environment.apiUrl}/api/auth/password/forgot`, body);
+  }
+
+  resetPassword(body: ResetPasswordRequest) {
+    return this.http.post<ResetPasswordResponse>(`${environment.apiUrl}/api/auth/password/reset`, body);
   }
 
   logout() {

@@ -5,23 +5,23 @@ import { ServiceItem } from '../models/service';
 
 @Injectable({ providedIn: 'root' })
 export class ServicesApi {
+  private readonly baseUrl = `${environment.apiUrl}/api/services`;
+
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<ServiceItem[]>(`${environment.apiUrl}/services/all`);
+    return this.http.get<ServiceItem[]>(this.baseUrl);
   }
 
   add(body: ServiceItem) {
-    return this.http.post<ServiceItem>(`${environment.apiUrl}/services/add`, body);
+    return this.http.post<ServiceItem>(this.baseUrl, body);
   }
 
   update(id: number, body: ServiceItem) {
-    return this.http.put<ServiceItem>(`${environment.apiUrl}/services/${id}`, body);
+    return this.http.put<ServiceItem>(`${this.baseUrl}/${id}`, body);
   }
 
   delete(id: number) {
-    return this.http.delete(`${environment.apiUrl}/services/${id}`, {
-      responseType: 'text' as const
-    });
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

@@ -5,24 +5,23 @@ import { Equipement } from '../models/equipement';
 
 @Injectable({ providedIn: 'root' })
 export class EquipementService {
+  private readonly baseUrl = `${environment.apiUrl}/api/equipements`;
+
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Equipement[]>(`${environment.apiUrl}/Equipement`);
+    return this.http.get<Equipement[]>(this.baseUrl);
   }
 
   add(body: Equipement) {
-    return this.http.post<Equipement>(`${environment.apiUrl}/Equipement/add`, body);
+    return this.http.post<Equipement>(this.baseUrl, body);
   }
 
   update(id: number, body: Equipement) {
-    return this.http.put<Equipement>(`${environment.apiUrl}/Equipement/${id}`, body);
+    return this.http.put<Equipement>(`${this.baseUrl}/${id}`, body);
   }
 
   delete(id: number) {
-    // خاطر backend يرجّع String
-    return this.http.delete(`${environment.apiUrl}/Equipement/${id}`, {
-      responseType: 'text' as const
-    });
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
