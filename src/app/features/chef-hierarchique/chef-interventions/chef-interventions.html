@@ -15,7 +15,6 @@
       <thead>
         <tr>
           <th>Demandeur</th>
-          <th>Service</th>
           <th>Appareil</th>
           <th>Serie</th>
           <th>Description</th>
@@ -27,7 +26,6 @@
         <ng-container *ngFor="let i of items">
           <tr>
             <td>{{ i.demandeurNom }} {{ i.demandeurPrenom }}<br><small>{{ i.demandeurEmail }}</small></td>
-            <td>{{ i.serviceNom || '-' }}</td>
             <td>{{ i.typeAppareil || '-' }}</td>
             <td>{{ i.numeroSerie || '-' }}</td>
             <td>{{ i.descriptionPanne || '-' }}</td>
@@ -40,7 +38,7 @@
             </td>
           </tr>
           <tr class="reject-row" *ngIf="rejectOpen[i.id]">
-            <td colspan="7">
+            <td colspan="6">
               <div class="reject-box">
                 <div class="label">Motif du refus (obligatoire)</div>
                 <input class="input" [(ngModel)]="rejectComment[i.id]" placeholder="Ex: informations incompletes..." />
@@ -54,7 +52,7 @@
         </ng-container>
 
         <tr *ngIf="items.length === 0">
-          <td colspan="7" class="empty">Aucune intervention en attente.</td>
+          <td colspan="6" class="empty">Aucune intervention en attente.</td>
         </tr>
       </tbody>
     </table>

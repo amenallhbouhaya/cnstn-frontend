@@ -15,18 +15,22 @@ export interface AppNotification {
 export class NotificationsApi {
   constructor(private http: HttpClient) {}
 
+  // Fetches the current user items.
   my() {
     return this.http.get<AppNotification[]>(`${environment.apiUrl}/api/notifications/my`);
   }
 
+  // Returns the unread notification count.
   unreadCount() {
     return this.http.get<{ count: number }>(`${environment.apiUrl}/api/notifications/unread-count`);
   }
 
+  // Marks a single notification as read.
   markRead(id: number) {
     return this.http.put(`${environment.apiUrl}/api/notifications/${id}/read`, {});
   }
 
+  // Marks every notification as read.
   markAllRead() {
     return this.http.put(`${environment.apiUrl}/api/notifications/read-all`, {});
   }

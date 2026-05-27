@@ -22,11 +22,13 @@ export class AdminUsersComponent {
   errorMsg = '';
   successMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     this.loadRoles();
     this.loadUsers();
   }
 
+  // Loads the current user list and normalizes role values.
   loadUsers() {
     this.loading = true;
     this.errorMsg = '';
@@ -52,6 +54,7 @@ export class AdminUsersComponent {
     });
   }
 
+  // Loads the available role names.
   loadRoles() {
     this.api.getRoles().subscribe({
       next: (data) => {
@@ -67,6 +70,7 @@ export class AdminUsersComponent {
     });
   }
 
+  // Creates a new role after validating the input.
   addRole() {
     const roleName = this.newRole.trim();
     if (!roleName) {
@@ -88,6 +92,7 @@ export class AdminUsersComponent {
     });
   }
 
+  // Updates the selected user role.
   changeRole(u: UserDto, roleValue: string) {
     const normalizedRole = roleValue?.trim() ?? '';
     if (!normalizedRole || normalizedRole === u.role) {
@@ -106,6 +111,7 @@ export class AdminUsersComponent {
     });
   }
 
+  // Deletes the selected user account.
   deleteUser(u: UserDto) {
     const confirmed = window.confirm(`Supprimer l'utilisateur ${u.nom} ${u.prenom} ?`);
     if (!confirmed) return;
@@ -125,6 +131,7 @@ export class AdminUsersComponent {
     });
   }
 
+  // Merges the available roles with the roles already used by users.
   private syncRolesWithUsers() {
     const roleSet = new Set(
       (this.roles ?? []).map((role) => (role ? role.trim() : role)).filter((role): role is string => !!role)

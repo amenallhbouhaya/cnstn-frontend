@@ -14,6 +14,7 @@ export class AdminLayoutComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
+  // Clears the current session and returns to the public home page.
   logout() {
     this.auth.logout();
     this.router.navigate(['/']);

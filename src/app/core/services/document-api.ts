@@ -9,10 +9,12 @@ export class DocumentApi {
 
   constructor(private http: HttpClient) {}
 
+  // Fetches all records for this API resource.
   getAll() {
     return this.http.get<DocumentItem[]>(this.baseUrl);
   }
 
+  // Handles the myDocs flow for the current screen.
   myDocs() {
     return this.http.get<DocumentItem[]>(`${this.baseUrl}/me`);
   }
@@ -24,6 +26,7 @@ export class DocumentApi {
     });
   }
 
+  // Handles the sendToDemandeur flow for the current screen.
   sendToDemandeur(eventId: number, file: File, titre: string, niveauAcces?: string) {
     const formData = new FormData();
     formData.append('file', file);
@@ -36,6 +39,7 @@ export class DocumentApi {
     );
   }
 
+  // Handles the sendToEmployes flow for the current screen.
   sendToEmployes(file: File, titre: string, niveauAcces?: string) {
     const formData = new FormData();
     formData.append('file', file);

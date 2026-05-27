@@ -13,14 +13,17 @@ export interface ExternalPartnerPayload { nom: string; email: string; }
 export class EmployeEvenementApi {
   constructor(private http: HttpClient) {}
 
+  // Handles the myEvents flow for the current screen.
   myEvents() {
     return this.http.get<any[]>(`${environment.apiUrl}/Evenement/my`);
   }
 
+  // Handles the allEvents flow for the current screen.
   allEvents() {
     return this.http.get<any[]>(`${environment.apiUrl}/Evenement/all`);
   }
 
+  // Handles the sallesDisponibles flow for the current screen.
   sallesDisponibles(dateDebut?: number | null, dateFin?: number | null) {
     let params = new HttpParams();
 
@@ -30,11 +33,13 @@ export class EmployeEvenementApi {
     return this.http.get<SalleMini[]>(`${environment.apiUrl}/Evenement/salles`, { params });
   }
 
+  // Handles the reservedSlots flow for the current screen.
   reservedSlots(date: string) {
     const params = new HttpParams().set('date', date);
     return this.http.get<string[]>(`${environment.apiUrl}/Evenement/reserved-slots`, { params });
   }
 
+  // Handles the availableSallesApi flow for the current screen.
   availableSallesApi(start: string, end: string) {
     const params = new HttpParams()
       .set('start', start)
@@ -42,6 +47,7 @@ export class EmployeEvenementApi {
     return this.http.get<SalleMini[]>(`${environment.apiUrl}/api/salles/available`, { params });
   }
 
+  // Handles the availableEquipementsApi flow for the current screen.
   availableEquipementsApi(start: string, end: string) {
     const params = new HttpParams()
       .set('start', start)
@@ -49,6 +55,7 @@ export class EmployeEvenementApi {
     return this.http.get<EquipMini[]>(`${environment.apiUrl}/api/equipements/available`, { params });
   }
 
+  // Handles the availableEquipementsStatusApi flow for the current screen.
   availableEquipementsStatusApi(start: string, end: string) {
     const params = new HttpParams()
       .set('start', start)
@@ -56,6 +63,7 @@ export class EmployeEvenementApi {
     return this.http.get<EquipAvailability[]>(`${environment.apiUrl}/api/equipements/availability`, { params });
   }
 
+  // Handles the equipementsDisponibles flow for the current screen.
   equipementsDisponibles() {
     return this.http.get<EquipMini[]>(`${environment.apiUrl}/Evenement/equipements`);
   }

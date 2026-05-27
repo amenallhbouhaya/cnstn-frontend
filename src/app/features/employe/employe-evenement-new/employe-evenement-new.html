@@ -1,120 +1,194 @@
-<div class="emp-page">
-  <div class="emp-header">
-    <div>
-      <h1 class="emp-title">Créer un événement</h1>
-      <p class="emp-subtitle">Choisissez une date depuis le calendrier et créez votre événement</p>
-    </div>
-    <a class="btn btn--outline" [routerLink]="backLink">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      {{ backLabel }}
-    </a>
-  </div>
+<div class="calendar-card" *ngIf="isBrowser">
+  <full-calendar [options]="calendarOptions"></full-calendar>
+</div>
 
-  <div class="alert alert--success" *ngIf="msg">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    {{ msg }}
-  </div>
-  <div class="alert alert--error" *ngIf="errorMsg">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-    {{ errorMsg }}
-  </div>
+<div class="event-modal" *ngIf="isEditorOpen">
+  <div class="event-modal__backdrop" (click)="closeEditor()"></div>
 
-  <div class="calendar-card">
-    <full-calendar *ngIf="isBrowser" [options]="calendarOptions"></full-calendar>
-  </div>
-
-  <div class="event-modal" *ngIf="isEditorOpen">
-    <div class="event-modal__backdrop" (click)="closeEditor()"></div>
-
-    <aside class="event-panel">
-      <div class="event-panel__header">
-        <div>
-          <h2>Nouvel événement</h2>
-          <p>{{ selectedDate }}</p>
-        </div>
-        <button class="btn btn--outline btn--sm" type="button" (click)="closeEditor()">Fermer</button>
+  <aside class="event-panel">
+    <div class="event-hero">
+      <div class="event-hero__icon" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="4"></rect>
+          <path d="M16 2v4"></path>
+          <path d="M8 2v4"></path>
+          <path d="M3 10h18"></path>
+        </svg>
       </div>
+      <div class="event-hero__copy">
+        <h1>Créer un événement</h1>
+        <p>Planifiez et organisez votre événement en quelques étapes simples.</p>
+      </div>
+      <button class="btn btn--outline btn--sm event-hero__action" type="button" (click)="closeEditor()">
+        <svg width="" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        Annuler
+      </button>
+    </div>
 
-      <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
-        <div class="form-row-2">
+    <div class="alert alert--success" *ngIf="msg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      {{ msg }}
+    </div>
+    <div class="alert alert--error" *ngIf="errorMsg">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      {{ errorMsg }}
+    </div>
+
+    <form class="event-form" [formGroup]="form" (ngSubmit)="submit()">
+      <section class="section-card section-card--full">
+        <div class="section-card__head">
+          <div class="section-card__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+          </div>
+          <h2>Informations de base</h2>
+        </div>
+
+        <div class="form-grid form-grid--2">
           <div class="field">
-            <label class="field__label">Titre *</label>
-            <input class="field__input" formControlName="titre" placeholder="Titre de l'événement">
+            <label class="field__label">Titre de l'événement <span>*</span></label>
+            <input class="field__input" formControlName="titre" placeholder="Ex : Conférence annuelle 2024">
           </div>
           <div class="field">
             <label class="field__label">Nom (optionnel)</label>
-            <input class="field__input" formControlName="nom" placeholder="Nom court">
+            <input class="field__input" formControlName="nom" placeholder="Nom court de l'événement">
           </div>
         </div>
 
-        <div class="field">
+        <div class="field field--full">
           <label class="field__label">Description</label>
           <textarea class="field__input field__input--textarea" formControlName="description" placeholder="Décrivez l'événement..."></textarea>
         </div>
+      </section>
 
-        <div class="invite-card">
-          <div class="invite-head">Invitations (apres acceptation)</div>
-          <label class="invite-toggle">
+      <div class="form-grid form-grid--2">
+        <section class="section-card">
+          <div class="section-card__head">
+            <div class="section-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path></svg>
+            </div>
+            <h2>Date et heure</h2>
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label class="field__label">Heure début <span>*</span></label>
+              <select class="field__input" formControlName="startTime">
+                <option value="">Sélectionner...</option>
+                <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field__label">Heure fin <span>*</span></label>
+              <select class="field__input" formControlName="endTime">
+                <option value="">Sélectionner...</option>
+                <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-card__head">
+            <div class="section-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 2"></path></svg>
+            </div>
+            <h2>Détails</h2>
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label class="field__label">Type <span>*</span></label>
+              <select class="field__input" formControlName="typeEvenement">
+                <option [ngValue]="null">-- Choisir un type --</option>
+                <option *ngFor="let option of eventTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
+              </select>
+            </div>
+
+            <div class="field" *ngIf="showSalleField">
+              <label class="field__label">Salle disponible <span>*</span></label>
+              <select class="field__input" formControlName="salleId">
+                <option [ngValue]="null">Sélectionner une salle</option>
+                <option *ngFor="let s of salles" [ngValue]="s.id">{{ s.nom }} ({{ s.capacite }} places)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field" *ngIf="showOnlineLinkField">
+            <label class="field__label">Lien en ligne <span>*</span></label>
+            <input class="field__input" formControlName="onlineLink" placeholder="https://...">
+          </div>
+
+          <small class="hint" *ngIf="showSalleField && (!form.controls.startTime.value || !form.controls.endTime.value)">
+            Choisissez d'abord l'heure début et fin pour charger les salles disponibles.
+          </small>
+          <small class="hint" *ngIf="showSalleField && noSallesAvailable">Aucune salle disponible sur ce créneau.</small>
+        </section>
+      </div>
+
+      <section class="section-card section-card--full">
+        <div class="section-card__head">
+          <div class="section-card__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"></path><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"></path><rect x="4" y="7" width="16" height="14" rx="2"></rect></svg>
+          </div>
+          <h2>Invitations (après acceptation)</h2>
+        </div>
+
+        <label class="invite-toggle">
+          <input
+            type="checkbox"
+            [checked]="inviteAll"
+            (change)="toggleInviteAll($any($event.target).checked)"
+          />
+          <span>Inviter tous les utilisateurs</span>
+        </label>
+
+        <div class="invite-hint" *ngIf="inviteAll">
+          Tous les utilisateurs recevront une invitation après acceptation.
+        </div>
+
+        <div class="invite-list" *ngIf="!inviteAll">
+          <label class="invite-item" *ngFor="let u of filteredUsers">
             <input
               type="checkbox"
-              [checked]="inviteAll"
-              (change)="toggleInviteAll($any($event.target).checked)"
+              [checked]="selectedUserIds.has(u.id)"
+              (change)="toggleUser(u.id)"
             />
-            <span>Inviter tous les utilisateurs</span>
-          </label>
-
-          <div class="invite-hint" *ngIf="inviteAll">
-            Tous les utilisateurs recevront une invitation apres acceptation.
-          </div>
-
-          <div class="invite-search" *ngIf="!inviteAll">
-            <input
-              class="field__input field__input--sm"
-              [(ngModel)]="inviteSearch"
-              [ngModelOptions]="{ standalone: true }"
-              name="inviteSearch"
-              placeholder="Rechercher utilisateur..."
-            />
-          </div>
-
-          <div class="invite-list" *ngIf="!inviteAll">
-            <label class="invite-item" *ngFor="let u of filteredUsers">
-              <input
-                type="checkbox"
-                [checked]="selectedUserIds.has(u.id)"
-                (change)="toggleUser(u.id)"
-              />
+            <span class="invite-item__content">
               <span class="invite-name">{{ u.nom }} {{ u.prenom }}</span>
               <span class="invite-meta">{{ u.email }} · {{ u.role }}</span>
-            </label>
-          </div>
+            </span>
+          </label>
+        </div>
 
-          <div class="invite-partner">
-            <div class="invite-head invite-head--sub">Inviter un partenaire externe</div>
-            <div class="invite-partner-list">
-              <div class="invite-partner-row" *ngFor="let p of externalPartners; let i = index">
-                <div class="form-row-2">
-                  <div class="field">
-                    <label class="field__label">Nom du partenaire</label>
-                    <input
-                      class="field__input field__input--sm"
-                      [(ngModel)]="p.nom"
-                      [ngModelOptions]="{ standalone: true }"
-                      [name]="'partenaireNom' + i"
-                      placeholder="Nom complet"
-                    >
-                  </div>
-                  <div class="field">
-                    <label class="field__label">Email du partenaire</label>
-                    <input
-                      class="field__input field__input--sm"
-                      [(ngModel)]="p.email"
-                      [ngModelOptions]="{ standalone: true }"
-                      [name]="'partenaireEmail' + i"
-                      placeholder="email@exemple.tn"
-                    >
-                  </div>
+        <div class="invite-partner">
+          <div class="invite-head invite-head--sub">Inviter un partenaire externe</div>
+
+          <div class="invite-partner-list">
+            <div class="invite-partner-row" *ngFor="let p of externalPartners; let i = index">
+              <div class="form-grid form-grid--2">
+                <div class="field">
+                  <label class="field__label">Nom du partenaire</label>
+                  <input
+                    class="field__input field__input--sm"
+                    [(ngModel)]="p.nom"
+                    [ngModelOptions]="{ standalone: true }"
+                    [name]="'partenaireNom' + i"
+                    placeholder="Nom complet"
+                  >
                 </div>
+                <div class="field">
+                  <label class="field__label">Email du partenaire</label>
+                  <input
+                    class="field__input field__input--sm"
+                    [(ngModel)]="p.email"
+                    [ngModelOptions]="{ standalone: true }"
+                    [name]="'partenaireEmail' + i"
+                    placeholder="email@exemple.tn"
+                  >
+                </div>
+              </div>
+
+              <div class="invite-partner-row__actions">
                 <button
                   class="btn btn--outline btn--sm invite-partner-remove"
                   type="button"
@@ -125,84 +199,49 @@
                 </button>
               </div>
             </div>
-
-            <div class="invite-partner-actions">
-              <button class="btn btn--outline btn--sm" type="button" (click)="addExternalPartner()">
-                Ajouter un partenaire
-              </button>
-            </div>
-
-            <small class="hint">Les invitations externes seront envoyees apres approbation, avec code de reference.</small>
           </div>
 
-        </div>
-
-        <div class="form-row-2">
-          <div class="field">
-            <label class="field__label">Heure début *</label>
-            <select class="field__input" formControlName="startTime">
-              <option value="">-- Choisir l'heure --</option>
-              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
-            </select>
+          <div class="invite-partner-actions">
+            <button class="btn btn--outline btn--sm" type="button" (click)="addExternalPartner()">
+              Ajouter un partenaire
+            </button>
           </div>
-          <div class="field">
-            <label class="field__label">Heure fin *</label>
-            <select class="field__input" formControlName="endTime">
-              <option value="">-- Choisir l'heure --</option>
-              <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
-            </select>
+
+          <small class="hint">Les invitations externes seront envoyées après approbation, avec code de référence.</small>
+        </div>
+      </section>
+
+      <section class="section-card section-card--full" *ngIf="showEquipementsField">
+        <div class="section-card__head">
+          <div class="section-card__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4 6 3v15"></path><path d="M9 21v-8h6v8"></path></svg>
           </div>
+          <h2>Équipements disponibles</h2>
         </div>
 
-        <div class="field">
-          <label class="field__label">Type *</label>
-          <select class="field__input" formControlName="typeEvenement">
-            <option [ngValue]="null">-- Choisir un type --</option>
-            <option *ngFor="let option of eventTypeOptions" [ngValue]="option.value">{{ option.label }}</option>
-          </select>
+        <div class="checkbox-grid">
+          <label *ngFor="let e of equipements" class="checkbox-label" [class.checkbox-label--unavailable]="!e.available">
+            <input
+              type="checkbox"
+              [checked]="selectedEquipIds.has(e.id)"
+              [disabled]="!e.available"
+              (change)="toggleEquip(e, $any($event.target).checked)">
+            <span>
+              {{ getEquipLabel(e) }} — {{ e.etat }}
+              <em *ngIf="!e.available" class="badge-reserved">Déjà réservé sur ce créneau</em>
+            </span>
+          </label>
         </div>
 
-        <div class="field" *ngIf="showSalleField">
-          <label class="field__label">Salle disponible *</label>
-          <select class="field__input" formControlName="salleId">
-            <option [ngValue]="null">-- Choisir une salle --</option>
-            <option *ngFor="let s of salles" [ngValue]="s.id">{{ s.nom }} ({{ s.capacite }} places)</option>
-          </select>
-          <small class="hint" *ngIf="!form.controls.startTime.value || !form.controls.endTime.value">
-            Choisissez d'abord l'heure début et fin pour charger les salles disponibles.
-          </small>
-          <small class="hint" *ngIf="noSallesAvailable">Aucune salle disponible sur ce créneau.</small>
-        </div>
+        <small class="hint" *ngIf="equipementWarnMsg">{{ equipementWarnMsg }}</small>
+      </section>
 
-        <div class="field" *ngIf="showOnlineLinkField">
-          <label class="field__label">Lien en ligne *</label>
-          <input class="field__input" formControlName="onlineLink" placeholder="https://...">
-        </div>
-
-        <div class="field" *ngIf="showEquipementsField">
-          <label class="field__label">Équipements disponibles</label>
-          <div class="checkbox-grid">
-            <label *ngFor="let e of equipements" class="checkbox-label" [class.checkbox-label--unavailable]="!e.available">
-              <input
-                type="checkbox"
-                [checked]="selectedEquipIds.has(e.id)"
-                [disabled]="!e.available"
-                (change)="toggleEquip(e, $any($event.target).checked)">
-              <span>
-                {{ e.typeEquipement }} — {{ e.etat }}
-                <em *ngIf="!e.available" class="badge-reserved">Déjà réservé sur ce créneau</em>
-              </span>
-            </label>
-          </div>
-          <small class="hint" *ngIf="equipementWarnMsg">{{ equipementWarnMsg }}</small>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn btn--primary" type="submit" [disabled]="loading">
-            {{ loading ? 'Création...' : 'Créer l\'événement' }}
-          </button>
-        </div>
-      </form>
-    </aside>
-  </div>
+      <div class="form-actions">
+        <button class="btn btn--primary event-submit" type="submit" [disabled]="loading">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          {{ loading ? 'Création...' : 'Créer l\'événement' }}
+        </button>
+      </div>
+    </form>
+  </aside>
 </div>

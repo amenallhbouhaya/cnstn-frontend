@@ -63,15 +63,18 @@ export class PublicPostsStore {
     this.updateState(next);
   }
 
+  // Handles the remove flow for the current screen.
   remove(id: number) {
     this.updateState(this.posts().filter((p) => p.id !== id));
   }
 
+  // Updates the selected item and refreshes the local state.
   private updateState(posts: PublicPost[]) {
     this.posts.set(posts);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
   }
 
+  // Loads the current dataset from the backend.
   private load(): PublicPost[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);

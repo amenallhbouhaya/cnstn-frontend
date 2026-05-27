@@ -7,6 +7,7 @@ import { EvenementAgendaItem } from '../models/evenement-agenda';
 export class AgendaApi {
   constructor(private http: HttpClient) {}
 
+  // Handles the responsableSalleAgenda flow for the current screen.
   responsableSalleAgenda() {
     return this.http.get<EvenementAgendaItem[]>(
       `${environment.apiUrl}/api/responsable-salle/evenements/agenda`

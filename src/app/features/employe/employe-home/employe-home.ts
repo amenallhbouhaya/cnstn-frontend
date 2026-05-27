@@ -57,12 +57,15 @@ export class EmployeHomeComponent implements OnInit {
 
   activeInterventionsCount = 0;
   unreadNotificationsCount = 0;
+  newDocsCount = 0;
 
+  // Initializes the component and loads its first data.
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.loadDashboard();
   }
 
+  // Loads the dashboard metrics and charts.
   loadDashboard(): void {
     this.loading = true;
 
@@ -86,6 +89,7 @@ export class EmployeHomeComponent implements OnInit {
 
         const eventsThisMonth = safeEvents.filter((event) => this.isDateInCurrentMonth(this.toDate(event?.dateDebut))).length;
         const newDocsCount = this.computeNewDocumentsCount(safeDocuments);
+        this.newDocsCount = newDocsCount;
 
         this.metrics = [
           {
@@ -119,18 +123,22 @@ export class EmployeHomeComponent implements OnInit {
       });
   }
 
+  // Provides a stable trackBy key for list rendering.
   trackByMetric(_index: number, metric: HomeMetric): string {
     return metric.label;
   }
 
+  // Provides a stable trackBy key for list rendering.
   trackByAgenda(_index: number, item: AgendaItem): string {
     return `${item.title}-${item.date.getTime()}`;
   }
 
+  // Provides a stable trackBy key for list rendering.
   trackByActivity(_index: number, item: ActivityItem): string {
     return `${item.tag}-${item.date.getTime()}`;
   }
 
+  // Builds the upcoming agenda view from raw events.
   private buildAgenda(events: any[]): AgendaItem[] {
     const now = Date.now();
 
@@ -147,6 +155,7 @@ export class EmployeHomeComponent implements OnInit {
       .slice(0, 5);
   }
 
+  // Builds the activity feed from events, interventions, and notifications.
   private buildActivities(events: any[], interventions: InterventionDto[], notifications: AppNotification[]): ActivityItem[] {
     const eventsActivity = events
       .map((event) => ({
@@ -180,14 +189,17 @@ export class EmployeHomeComponent implements OnInit {
       .slice(0, 7);
   }
 
+  // Converts intervention states into labels shown in the UI.
   private interventionStatusLabel(status?: string | null): string {
     return interventionStatusLabel(status);
   }
 
+  // Checks whether an intervention still needs user action.
   private isInterventionActive(status?: string | null): boolean {
     return isInterventionBlockingStatus(status);
   }
 
+  // Checks whether a date falls inside the current month.
   private isDateInCurrentMonth(date: Date | null): boolean {
     if (!date) return false;
 
@@ -195,6 +207,7 @@ export class EmployeHomeComponent implements OnInit {
     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
   }
 
+  // Counts documents that have not been viewed yet.
   private computeNewDocumentsCount(documents: any[]): number {
     const seenIds = this.readSeenDocIds();
     return documents.filter((item) => {
@@ -203,6 +216,7 @@ export class EmployeHomeComponent implements OnInit {
     }).length;
   }
 
+  // Reads the set of already viewed document IDs from storage.
   private readSeenDocIds(): Set<number> {
     const raw = localStorage.getItem(this.seenDocsKey);
     if (!raw) return new Set<number>();
@@ -215,6 +229,7 @@ export class EmployeHomeComponent implements OnInit {
     }
   }
 
+  // Normalizes different input formats into a Date object.
   private toDate(input: unknown): Date | null {
     if (input == null) return null;
 

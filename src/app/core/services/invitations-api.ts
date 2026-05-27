@@ -21,10 +21,12 @@ export interface InvitationView {
 export class InvitationsApi {
   constructor(private http: HttpClient) {}
 
+  // Returns the requested data or derived value.
   getInvitation(id: number) {
     return this.http.get<InvitationView>(`${environment.apiUrl}/api/invitations/${id}`);
   }
 
+  // Handles the checkInvitation flow for the current screen.
   checkInvitation(body: { referenceCode: string }) {
     return this.http.post<{
       status: string;
@@ -34,6 +36,7 @@ export class InvitationsApi {
     }>(`${environment.apiUrl}/api/invitations/check`, body);
   }
 
+  // Handles the consumeInvitation flow for the current screen.
   consumeInvitation(body: { referenceCode: string }) {
     return this.http.post<{
       status: string;

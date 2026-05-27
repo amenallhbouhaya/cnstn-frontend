@@ -7,7 +7,8 @@ import { UserDto } from '../models/user';
 export class UsersDirectoryService {
   constructor(private http: HttpClient) {}
 
+  // Fetches all records for this API resource.
   getAll() {
-    return this.http.get<UserDto[]>(`${environment.apiUrl}/api/users/list`);
+    return this.http.get<UserDto[]>(`${environment.apiUrl}/Utilisateur/all`);
   }
 }

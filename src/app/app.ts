@@ -16,10 +16,12 @@ export class App {
   protected readonly title = signal('cnstn-frontend');
   protected readonly isDarkMode = signal(false);
 
+  // Initializes the component or service dependencies.
   constructor() {
     this.initializeTheme();
   }
 
+  // Switches between the light and dark themes.
   protected toggleTheme(): void {
     const nextThemeIsDark = !this.isDarkMode();
     this.isDarkMode.set(nextThemeIsDark);
@@ -30,6 +32,7 @@ export class App {
     }
   }
 
+  // Restores the saved theme or the system preference on startup.
   private initializeTheme(): void {
     if (!isPlatformBrowser(this.platformId)) {
       this.applyTheme('light');
@@ -46,6 +49,7 @@ export class App {
     this.applyTheme(preferredTheme);
   }
 
+  // Applies the selected theme to the document root.
   private applyTheme(theme: 'light' | 'dark'): void {
     this.document.documentElement.setAttribute('data-theme', theme);
   }

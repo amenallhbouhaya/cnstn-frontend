@@ -23,6 +23,7 @@ export class ChefLayoutComponent implements OnInit, OnDestroy {
 
   unreadCount = 0;
 
+  // Initializes the component and loads its first data.
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -38,11 +39,13 @@ export class ChefLayoutComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Cleans up subscriptions and browser resources before destruction.
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  // Clears the current session and returns to the public home page.
   logout() {
     this.auth.logout();
     this.router.navigate(['/']);

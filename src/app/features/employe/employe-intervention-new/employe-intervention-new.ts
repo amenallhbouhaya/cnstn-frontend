@@ -29,17 +29,18 @@ export class EmployeInterventionNewComponent {
   errorMsg = '';
   msg = '';
 
+  // Handles the normalizeRole flow for the current screen.
   private normalizeRole(value: string | null | undefined): string {
     return String(value ?? '').replace(/\s+/g, '').toLowerCase();
   }
 
+  // Handles the backLink flow for the current screen.
   get backLink(): string {
     const role = this.normalizeRole(this.auth.role);
     if (role === 'admin') return '/admin';
     if (role === 'chefhierarchique' || role === 'chef-hierarchique') return '/chef-hierarchique';
     if (role === 'responsablesalle') return '/responsable-salle';
     if (role === 'responsablesecurite') return '/responsable-securite';
-    if (role === 'directeurdsn') return '/directeur-dsn';
     return '/employe/interventions';
   }
 
@@ -50,6 +51,7 @@ export class EmployeInterventionNewComponent {
     descriptionPanne: ['', Validators.required]
   });
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     // lit la liste via core service (/api/equipements)
     this.equipApi.getAll().subscribe({
@@ -59,6 +61,7 @@ export class EmployeInterventionNewComponent {
 
   }
 
+  // Handles the related user interaction or event.
   onEquipementChange(value: string) {
     const id = value ? Number(value) : null;
     this.selectedEquipId = Number.isFinite(id as number) ? id : null;
@@ -72,6 +75,7 @@ export class EmployeInterventionNewComponent {
     }
   }
 
+  // Validates the form and sends it to the backend.
   submit() {
     if (this.form.invalid) return;
 

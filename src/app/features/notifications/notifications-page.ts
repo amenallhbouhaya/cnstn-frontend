@@ -22,11 +22,13 @@ export class NotificationsPageComponent {
   loading = false;
   errorMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';
@@ -42,6 +44,7 @@ export class NotificationsPageComponent {
       });
   }
 
+  // Opens the related view or starts the corresponding action.
   open(notification: AppNotification) {
     const go = () => this.router.navigateByUrl(notification.targetPath || '/');
 
@@ -59,6 +62,7 @@ export class NotificationsPageComponent {
     });
   }
 
+  // Marks the item as processed or read.
   markAllAsRead() {
     this.api.markAllRead().subscribe({
       next: () => {

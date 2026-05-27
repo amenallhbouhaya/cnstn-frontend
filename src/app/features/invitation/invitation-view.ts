@@ -21,6 +21,7 @@ export class InvitationViewComponent {
   loading = false;
   errorMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -44,11 +45,13 @@ export class InvitationViewComponent {
     });
   }
 
+  // Prepares the current view for printing.
   print() {
     if (!isPlatformBrowser(this.platformId)) return;
     window.print();
   }
 
+  // Prepares the current view for PDF export.
   downloadPdf() {
     if (!isPlatformBrowser(this.platformId)) return;
     const originalTitle = document.title;

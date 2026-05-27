@@ -37,7 +37,7 @@
 
 .sidebar-brand {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
@@ -47,15 +47,6 @@
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(6px);
 }
-
-.sidebar-brand-pill {
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.85), rgba(234, 88, 12, 0.9));
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
 }
 
 .sidebar-logo {

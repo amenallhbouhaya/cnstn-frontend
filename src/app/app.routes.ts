@@ -6,12 +6,10 @@ import { AdminHomeComponent } from './features/admin/admin-home/admin-home';
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout';
 import { AdminSallesComponent } from './features/admin/admin-salles/admin-salles';
 import { AdminUsersComponent } from './features/admin/admin-users/admin-users';
-import { AdminPendingUsersComponent } from './features/admin/admin-pending-users/admin-pending-users';
 import { AdminEquipementsComponent } from './features/admin/admin-equipements/admin-equipements';
-import { AdminEvenementsComponent } from './features/admin/admin-evenements/admin-evenements';
-import { AdminServicesComponent } from './features/admin/admin-services/admin-services';
 import { AdminStockPanneComponent } from './features/admin/admin-stock-panne/admin-stock-panne';
 import { AdminPostsComponent } from './features/admin/admin-posts/admin-posts';
+import { AdminInterventionsComponent } from './features/admin/admin-interventions/admin-interventions';
 
 import { EmployeHomeComponent } from './features/employe/employe-home/employe-home';
 import { EmployeLayoutComponent } from './features/employe/employe-layout/employe-layout';
@@ -39,7 +37,6 @@ import { ChefLayoutComponent } from './features/chef-hierarchique/chef-layout/ch
 import { ChefHomeComponent } from './features/chef-hierarchique/chef-home/chef-home';
 import { ChefPendingUsersComponent } from './features/chef-hierarchique/chef-pending-users/chef-pending-users';
 import { ChefInterventionsComponent } from './features/chef-hierarchique/chef-interventions/chef-interventions';
-import { DsnInterventionsComponent } from './features/directeur-dsn/dsn-interventions/dsn-interventions';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
@@ -58,11 +55,9 @@ export const routes: Routes = [
       { path: 'salles', component: AdminSallesComponent },
       { path: 'equipements', component: AdminEquipementsComponent },
       { path: 'users', component: AdminUsersComponent },
-      { path: 'comptes-en-attente', component: AdminPendingUsersComponent },
-      { path: 'evenements', component: AdminEvenementsComponent },
+      { path: 'evenements', component: EmployeEvenementNewComponent },
       { path: 'interventions/new', component: EmployeInterventionNewComponent },
-      { path: 'interventions', component: DsnInterventionsComponent },
-      { path: 'services', component: AdminServicesComponent },
+      { path: 'interventions', component: AdminInterventionsComponent },
       { path: 'posts', component: AdminPostsComponent },
       { path: 'stock-en-panne', component: AdminStockPanneComponent },
       { path: 'compte', component: EmployeCompteComponent }
@@ -102,7 +97,6 @@ export const routes: Routes = [
                 'Admin',
                 'ResponsableSalle',
                 'ResponsableSecurite',
-                'DirecteurDsn',
                 'ChefHierarchique',
                 'Chef-hierarchique',
                 'chef-hierarchique'
@@ -134,7 +128,6 @@ export const routes: Routes = [
         ]
       },
 
-      { path: 'interventions/new', component: EmployeInterventionNewComponent },
 
       { path: 'salles', component: AdminSallesComponent },
       { path: 'agenda', component: RsalleAgendaComponent },
@@ -203,7 +196,6 @@ export const routes: Routes = [
           { path: 'new', component: EmployeEvenementNewComponent }
         ]
       },
-      { path: 'interventions/new', component: EmployeInterventionNewComponent },
       { path: 'documents/new', component: DsnDocumentNewComponent },
       { path: 'compte', component: EmployeCompteComponent }
     ]

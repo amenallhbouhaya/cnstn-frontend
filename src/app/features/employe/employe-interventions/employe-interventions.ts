@@ -19,10 +19,12 @@ export class EmployeInterventionsComponent {
   loading = false;
   errorMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';
@@ -38,14 +40,17 @@ export class EmployeInterventionsComponent {
       });
   }
 
+  // Formats a status value for the template.
   statusLabel(status?: string | null) {
     return interventionStatusLabel(status);
   }
 
+  // Handles the isBlockingStatus flow for the current screen.
   isBlockingStatus(status?: string | null) {
     return isInterventionBlockingStatus(status);
   }
 
+  // Handles the isRepared flow for the current screen.
   isRepared(status?: string | null) {
     return status === 'REPARE';
   }

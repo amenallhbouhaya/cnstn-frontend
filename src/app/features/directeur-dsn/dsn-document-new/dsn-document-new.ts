@@ -27,11 +27,13 @@ export class DsnDocumentNewComponent {
     niveauAcces: ['']
   });
 
+  // Stores the file chosen in the file picker.
   onFileSelected(ev: Event) {
     const input = ev.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
   }
 
+  // Validates the form and sends it to the backend.
   submit() {
     const titre = (this.form.value.titre ?? '').trim();
     const niveauAcces = (this.form.value.niveauAcces ?? '').trim();

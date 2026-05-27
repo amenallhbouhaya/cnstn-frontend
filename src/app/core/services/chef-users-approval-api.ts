@@ -16,14 +16,17 @@ export interface PendingRegistration {
 export class ChefUsersApprovalApi {
   constructor(private http: HttpClient) {}
 
+  // Fetches the pending items waiting for approval.
   pending() {
     return this.http.get<PendingRegistration[]>(`${environment.apiUrl}/api/chef-hierarchique/users/pending`);
   }
 
+  // Accepts the current item and refreshes the list.
   accept(id: number) {
     return this.http.post<{ status: string; message?: string }>(`${environment.apiUrl}/api/chef-hierarchique/users/${id}/accept`, {});
   }
 
+  // Rejects the current item and refreshes the list.
   reject(id: number) {
     return this.http.post<{ status: string; message?: string }>(`${environment.apiUrl}/api/chef-hierarchique/users/${id}/reject`, {});
   }

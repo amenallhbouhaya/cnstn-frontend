@@ -23,7 +23,6 @@ export class EmployeCompteComponent {
   meEmail = '';
   meRole = '';
   meMatricule = 0;
-  meService = '';
 
   profileForm = this.fb.group({
     nom: ['', Validators.required],
@@ -38,12 +37,14 @@ export class EmployeCompteComponent {
     newPassword: ['', Validators.required],
   });
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     this.loadMe();
     this.loadPhoto();
   }
 
+  // Loads or refreshes the related data from the backend.
   loadMe() {
   this.loading = true;
   this.errorMsg = '';
@@ -56,8 +57,6 @@ export class EmployeCompteComponent {
       this.meEmail = me.email;
       this.meRole = me.role;
       this.meMatricule = me.matricule;
-      this.meService = me.serviceNom ?? '';
-
       this.profileForm.patchValue({
         nom: me.nom,
         prenom: me.prenom,
@@ -78,6 +77,7 @@ export class EmployeCompteComponent {
   });
 }
 
+  // Persists the current changes.
   saveProfile() {
     if (this.profileForm.invalid) return;
 
@@ -97,6 +97,7 @@ export class EmployeCompteComponent {
     });
   }
 
+  // Persists the current changes.
   savePassword() {
     if (this.passForm.invalid) return;
 
@@ -118,6 +119,7 @@ export class EmployeCompteComponent {
   }
   photoUrl: string | null = null;
 
+// Loads or refreshes the related data from the backend.
 loadPhoto() {
   this.api.getPhoto().subscribe({
     next: (blob) => {
@@ -131,6 +133,7 @@ loadPhoto() {
   });
 }
 
+// Handles the related user interaction or event.
 onPhotoSelected(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];

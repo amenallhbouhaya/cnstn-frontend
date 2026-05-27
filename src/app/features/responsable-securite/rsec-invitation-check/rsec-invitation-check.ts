@@ -24,10 +24,12 @@ export class RsecInvitationCheckComponent {
   message = '';
   invitation: InvitationView | null = null;
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
   }
 
+  // Validates the current input and loads the matching data.
   check() {
     this.resetState();
     if (!this.referenceCode.trim()) {
@@ -53,6 +55,7 @@ export class RsecInvitationCheckComponent {
     });
   }
 
+  // Confirms and consumes the selected invitation.
   consume() {
     this.errorMsg = '';
     this.loading = true;
@@ -73,6 +76,7 @@ export class RsecInvitationCheckComponent {
     });
   }
 
+  // Clears the current form or component state.
   private resetState() {
     this.errorMsg = '';
     this.status = '';

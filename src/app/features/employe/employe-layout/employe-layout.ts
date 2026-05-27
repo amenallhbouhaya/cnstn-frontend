@@ -43,6 +43,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
   userInitials = 'MC';
   userPhotoUrl: string | null = null;
 
+  // Initializes the component and loads its first data.
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -65,6 +66,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Cleans up subscriptions and browser resources before destruction.
   ngOnDestroy(): void {
     if (this.userPhotoUrl) {
       URL.revokeObjectURL(this.userPhotoUrl);
@@ -74,6 +76,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Closes the notification menu when the user clicks outside it.
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (!this.notifMenuOpen || !this.notifWrapper) return;
@@ -84,11 +87,13 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Closes the notification menu when Escape is pressed.
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     this.notifMenuOpen = false;
   }
 
+  // Toggles the notification menu and loads the list when opening it.
   toggleNotifications(event: MouseEvent): void {
     event.stopPropagation();
     this.notifMenuOpen = !this.notifMenuOpen;
@@ -98,6 +103,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Refreshes the notifications list and loading state.
   loadNotifications(showLoader = true): void {
     if (showLoader) {
       this.notifLoading = true;
@@ -118,6 +124,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Opens the selected notification and marks it as read when needed.
   openNotification(item: AppNotification): void {
     const targetPath = item.targetPath || '/employe/notifications';
     const go = () => {
@@ -140,6 +147,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Marks every notification as read.
   markAllNotificationsRead(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -154,16 +162,19 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Navigates to the full notifications page.
   openAllNotifications(event: MouseEvent): void {
     event.stopPropagation();
     this.notifMenuOpen = false;
     this.router.navigate(['/employe/notifications']);
   }
 
+  // Handles the notificationPreview flow for the current screen.
   get notificationPreview(): AppNotification[] {
     return this.notifications.slice(0, 6);
   }
 
+  // Loads the current user profile for the layout header.
   private loadCurrentUser(): void {
     this.userMeApi.me().subscribe({
       next: (me) => {
@@ -181,6 +192,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Loads the profile photo and creates a browser object URL.
   private loadCurrentUserPhoto(): void {
     this.userMeApi.getPhoto().subscribe({
       next: (blob) => {
@@ -196,6 +208,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Builds fallback initials when no profile photo is available.
   private buildInitials(prenom: string, nom: string): string {
     const first = prenom.charAt(0).toUpperCase();
     const last = nom.charAt(0).toUpperCase();
@@ -204,6 +217,7 @@ export class EmployeLayoutComponent implements OnInit, OnDestroy {
     return initials || 'MC';
   }
 
+  // Clears the current session and returns to the public home page.
   logout() {
     this.auth.logout();
     this.router.navigate(['/']);

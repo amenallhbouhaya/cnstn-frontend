@@ -24,11 +24,13 @@ export class RsalleEvenementsPendingComponent {
   rejectOpen: Record<number, boolean> = {};
   rejectComment: Record<number, string> = {};
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';
@@ -43,6 +45,7 @@ export class RsalleEvenementsPendingComponent {
       });
   }
 
+  // Accepts the current item and refreshes the list.
   accept(id: number) {
     this.api.acceptRsalle(id).subscribe({
       next: () => this.load(),
@@ -50,16 +53,19 @@ export class RsalleEvenementsPendingComponent {
     });
   }
 
+  // Opens the rejection dialog.
   openReject(id: number) {
     this.rejectOpen[id] = true;
     this.rejectComment[id] = this.rejectComment[id] ?? '';
   }
 
+  // Closes the rejection dialog without sending anything.
   cancelReject(id: number) {
     this.rejectOpen[id] = false;
     this.rejectComment[id] = '';
   }
 
+  // Confirms the rejection action and sends the comment to the backend.
   confirmReject(id: number) {
     const c = (this.rejectComment[id] ?? '').trim();
     if (!c) {

@@ -82,10 +82,12 @@ export class AdminHomeComponent implements OnInit {
     }
   };
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     this.loadStats();
   }
 
+  // Loads the admin dashboard statistics.
   loadStats() {
     this.loadingStats = true;
     this.dashApi.stats().subscribe({
@@ -101,6 +103,7 @@ export class AdminHomeComponent implements OnInit {
     });
   }
 
+  // Updates the selected item and refreshes the local state.
   private updateCharts(s: AdminDashboardStats) {
     this.eventsChartData = {
       ...this.eventsChartData,

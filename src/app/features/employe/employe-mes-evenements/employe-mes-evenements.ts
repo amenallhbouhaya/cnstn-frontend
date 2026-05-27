@@ -20,12 +20,14 @@ export class EmployeMesEvenementsComponent {
   loading: boolean = false;
   errorMsg: string = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     console.log('MesEvenements INIT');
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     console.log('MesEvenements LOAD -> calling /Evenement/my');
     this.loading = true;
@@ -51,6 +53,7 @@ export class EmployeMesEvenementsComponent {
       });
   }
 
+  // Maps backend workflow states to display labels.
   workflowLabel(statut: string | null | undefined): string {
     switch (String(statut ?? '').trim()) {
       case 'EN_ATTENTE_RSALLE':
@@ -72,6 +75,7 @@ export class EmployeMesEvenementsComponent {
     }
   }
 
+  // Returns the CSS class used for the current status.
   statusBadgeClass(statut: string | null | undefined): string {
     const value = String(statut ?? '').trim();
     if (value === 'APPROUVE') return 'badge--green';

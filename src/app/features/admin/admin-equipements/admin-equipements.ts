@@ -29,11 +29,13 @@ export class AdminEquipementsComponent {
 
   private platformId = inject(PLATFORM_ID);
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';
@@ -53,14 +55,7 @@ export class AdminEquipementsComponent {
     });
   }
 
-  newItem() {
-    this.editingId = null;
-    this.form.reset({
-      nom: '',
-      numeroSerie: ''
-    });
-  }
-
+  // Handles the edit flow for the current screen.
   edit(e: Equipement) {
     this.editingId = e.id ?? null;
 
@@ -70,6 +65,7 @@ export class AdminEquipementsComponent {
     });
   }
 
+  // Validates the form and sends it to the backend.
   submit() {
     if (this.form.invalid) return;
 
@@ -83,7 +79,11 @@ export class AdminEquipementsComponent {
     if (this.editingId === null) {
       this.api.add(payload).subscribe({
         next: () => {
-          this.newItem();
+          this.editingId = null;
+          this.form.reset({
+            nom: '',
+            numeroSerie: ''
+          });
           this.load();
         },
         error: (err) => {
@@ -105,6 +105,7 @@ export class AdminEquipementsComponent {
     }
   }
 
+  // Handles the remove flow for the current screen.
   remove(id?: number) {
     if (!id) return;
 

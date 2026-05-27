@@ -4,7 +4,7 @@
       <span class="hero-kicker">Tableau de bord employe</span>
       <h1>Bonjour {{ userFirstName }}, pilotez votre espace de travail</h1>
       <p>
-        Vous avez {{ activeInterventionsCount }} intervention{{ activeInterventionsCount > 1 ? 's' : '' }} active{{ activeInterventionsCount > 1 ? 's' : '' }}
+        Vous avez {{ newDocsCount }} document{{ newDocsCount > 1 ? 's' : '' }} en attente
         et {{ unreadNotificationsCount }} notification{{ unreadNotificationsCount > 1 ? 's' : '' }} non lue{{ unreadNotificationsCount > 1 ? 's' : '' }}.
       </p>
 
@@ -84,19 +84,28 @@
     </article>
   </section>
 
-  <section class="workflow-strip" aria-label="Étapes de workflow">
-    <div class="workflow-step">
-      <span class="workflow-index">01</span>
-      <p>Initiez votre demande</p>
-    </div>
-    <div class="workflow-step">
-      <span class="workflow-index">02</span>
-      <p>Suivez son traitement</p>
-    </div>
-    <div class="workflow-step">
-      <span class="workflow-index">03</span>
-      <p>Validez et archivez</p>
-    </div>
+  <section class="quick-strip" aria-label="Raccourcis rapides">
+    <a class="quick-strip-card quick-strip-card--blue" routerLink="/employe/evenements/new">
+      <span class="quick-strip-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+      </span>
+      <span class="quick-strip-text">Créer un événement</span>
+      <span class="quick-strip-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="quick-strip-card quick-strip-card--orange" routerLink="/employe/interventions">
+      <span class="quick-strip-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </span>
+      <span class="quick-strip-text">Suivre mes interventions</span>
+      <span class="quick-strip-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="quick-strip-card quick-strip-card--teal" routerLink="/employe/notifications">
+      <span class="quick-strip-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </span>
+      <span class="quick-strip-text">Voir notifications</span>
+      <span class="quick-strip-arrow" aria-hidden="true">→</span>
+    </a>
   </section>
 
   <section class="quick-cards" aria-label="Actions rapides">

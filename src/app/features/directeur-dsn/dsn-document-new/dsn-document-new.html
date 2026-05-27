@@ -12,22 +12,26 @@
 
   <div class="card form-card">
     <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
-      <div class="field">
-        <label class="label">Titre du document *</label>
-        <input class="input" formControlName="titre" placeholder="Ex: Décision DSN" autocomplete="off" />
-      </div>
+      <div class="row-fields">
+        <div class="field">
+          <label class="label">Titre du document *</label>
+          <input class="input" formControlName="titre" placeholder="Ex: Décision DSN" autocomplete="off" />
+        </div>
 
-      <div class="field">
-        <label class="label">Niveau accès (optionnel)</label>
-        <input class="input" formControlName="niveauAcces" placeholder="Ex: Interne" autocomplete="off" />
+        <div class="field">
+          <label class="label">Niveau accès (optionnel)</label>
+          <input class="input" formControlName="niveauAcces" placeholder="Ex: Interne" autocomplete="off" />
+        </div>
       </div>
 
       <div class="field file-field">
         <label class="label">Fichier *</label>
         <label class="upload-zone" for="dsn-file-input">
           <span class="upload-icon" aria-hidden="true">⇪</span>
-          <span class="upload-title">Choisir un fichier</span>
-          <span class="upload-subtitle">PDF, DOCX, XLSX ou image</span>
+          <div class="upload-text">
+            <span class="upload-title">Choisir un fichier</span>
+            <span class="upload-subtitle">PDF, DOCX, XLSX ou image</span>
+          </div>
           <span class="upload-filename" *ngIf="selectedFile">{{ selectedFile.name }}</span>
         </label>
         <input

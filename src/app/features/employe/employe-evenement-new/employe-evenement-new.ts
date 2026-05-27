@@ -1,7 +1,7 @@
 import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DayCellMountArg } from '@fullcalendar/core';
 import frLocale from '@fullcalendar/core/locales/fr';
@@ -12,6 +12,7 @@ import { EmployeEvenementApi, SalleMini, EquipAvailability, EquipMini } from '..
 import { Evenement } from '../../../core/models/evenement';
 import { TypeEvenement } from '../../../core/models/type-evenement';
 import { AuthService } from '../../../core/services/auth';
+import { EquipementService } from '../../../core/services/equipement';
 import { UsersDirectoryService } from '../../../core/services/users-directory';
 import { UserDto } from '../../../core/models/user';
 
@@ -25,12 +26,13 @@ interface ExternalPartnerDraft {
 @Component({
   selector: 'app-employe-evenement-new',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, FullCalendarModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, FullCalendarModule],
   templateUrl: './employe-evenement-new.html',
   styleUrl: './employe-evenement-new.css'
 })
 export class EmployeEvenementNewComponent {
   private api = inject(EmployeEvenementApi);
+  private equipementApi = inject(EquipementService);
   private usersApi = inject(UsersDirectoryService);
   private fb = inject(FormBuilder);
   private platformId = inject(PLATFORM_ID);
@@ -41,6 +43,7 @@ export class EmployeEvenementNewComponent {
 
   salles: SalleMini[] = [];
   equipements: EquipAvailability[] = [];
+  private equipementNameById = new Map<number, string>();
   selectedEquipIds = new Set<number>();
   selectedDate = '';
   isEditorOpen = false;
@@ -54,10 +57,12 @@ export class EmployeEvenementNewComponent {
   ];
   timeOptions: string[] = Array.from({ length: 24 }, (_, hour) => `${String(hour).padStart(2, '0')}:00`);
 
+  // Handles the normalizeRole flow for the current screen.
   private normalizeRole(value: string | null | undefined): string {
     return String(value ?? '').replace(/\s+/g, '').toLowerCase();
   }
 
+  // Handles the backLink flow for the current screen.
   get backLink(): string {
     const role = this.normalizeRole(this.auth.role);
     if (role === 'responsablesalle') return '/responsable-salle/mes-evenements';
@@ -66,6 +71,7 @@ export class EmployeEvenementNewComponent {
     return '/employe/evenements';
   }
 
+  // Handles the backLabel flow for the current screen.
   get backLabel(): string {
     return 'Mes événements';
   }
@@ -77,7 +83,6 @@ export class EmployeEvenementNewComponent {
 
   users: UserDto[] = [];
   inviteAll = false;
-  inviteSearch = '';
   selectedUserIds = new Set<number>();
   externalPartners: ExternalPartnerDraft[] = [{ nom: '', email: '' }];
 
@@ -92,6 +97,7 @@ export class EmployeEvenementNewComponent {
     onlineLink: ['']
   });
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!this.isBrowser) return;
 
@@ -135,10 +141,12 @@ export class EmployeEvenementNewComponent {
     this.form.controls.endTime.valueChanges.subscribe(() => this.refreshAvailability());
 
     this.applyTypeRules(TypeEvenement.Presentiel);
+    this.loadEquipementNames();
     this.loadUsers();
     this.loadCalendarEvents();
   }
 
+  // Loads or refreshes the related data from the backend.
   private loadCalendarEvents() {
     this.api.allEvents().subscribe({
       next: (data) => {
@@ -162,6 +170,7 @@ export class EmployeEvenementNewComponent {
     });
   }
 
+  // Handles the related user interaction or event.
   onDateClick(arg: DateClickArg) {
     const clickedDate = arg.date;
     if (!this.isSelectableDate(clickedDate)) return;
@@ -176,7 +185,6 @@ export class EmployeEvenementNewComponent {
     this.noSallesAvailable = false;
     this.selectedEquipIds.clear();
     this.inviteAll = false;
-    this.inviteSearch = '';
     this.selectedUserIds.clear();
     this.externalPartners = [{ nom: '', email: '' }];
 
@@ -194,11 +202,13 @@ export class EmployeEvenementNewComponent {
     this.applyTypeRules(TypeEvenement.Presentiel);
   }
 
+  // Handles the closeEditor flow for the current screen.
   closeEditor() {
     this.isEditorOpen = false;
     this.selectedDate = '';
   }
 
+  // Handles the decorateDayCell flow for the current screen.
   private decorateDayCell(arg: DayCellMountArg) {
     const isSelectable = this.isSelectableDate(arg.date);
     if (!isSelectable) return;
@@ -214,15 +224,18 @@ export class EmployeEvenementNewComponent {
     top.appendChild(plus);
   }
 
+  // Handles the isSelectableDate flow for the current screen.
   private isSelectableDate(date: Date): boolean {
     const value = this.toDateInput(date);
     return value >= this.minDate;
   }
 
+  // Handles the firstDayOfNextMonth flow for the current screen.
   private firstDayOfNextMonth(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth() + 1, 1);
   }
 
+  // Handles the applyTypeRules flow for the current screen.
   private applyTypeRules(type: TypeEvenement | null) {
     const salleControl = this.form.controls.salleId;
     const onlineLinkControl = this.form.controls.onlineLink;
@@ -249,21 +262,25 @@ export class EmployeEvenementNewComponent {
     }
   }
 
+  // Handles the showSalleField flow for the current screen.
   get showSalleField(): boolean {
     const type = this.form.controls.typeEvenement.value as TypeEvenement | null;
     return type === TypeEvenement.Presentiel || type === TypeEvenement.En_Line_Presentiel;
   }
 
+  // Handles the showOnlineLinkField flow for the current screen.
   get showOnlineLinkField(): boolean {
     const type = this.form.controls.typeEvenement.value as TypeEvenement | null;
     return type === TypeEvenement.En_Line_Presentiel;
   }
 
+  // Handles the showEquipementsField flow for the current screen.
   get showEquipementsField(): boolean {
     const type = this.form.controls.typeEvenement.value as TypeEvenement | null;
     return type === TypeEvenement.Presentiel || type === TypeEvenement.En_Line_Presentiel;
   }
 
+  // Handles the refreshAvailability flow for the current screen.
   private refreshAvailability() {
     const startDateTime = this.computeDateTime(this.form.controls.startTime.value);
     const endDateTime = this.computeDateTime(this.form.controls.endTime.value);
@@ -308,6 +325,7 @@ export class EmployeEvenementNewComponent {
     });
   }
 
+  // Handles the normalizeEquipements flow for the current screen.
   private normalizeEquipements(raw: unknown): EquipAvailability[] {
     return this.toList<Record<string, unknown>>(raw, 'equipements')
       .filter((item): item is Record<string, unknown> => !!item && typeof item === 'object')
@@ -315,7 +333,7 @@ export class EmployeEvenementNewComponent {
         const id = Number(item['id']);
         const etat = String(item['etat'] ?? '').trim();
         const reservable = Boolean(item['reservable']);
-        const typeEquipement = String(item['typeEquipement'] ?? '').trim();
+        const typeEquipement = this.pickEquipementLabel(item, id);
         const availableRaw = item['available'];
         const available = typeof availableRaw === 'boolean' ? availableRaw : true;
 
@@ -330,6 +348,88 @@ export class EmployeEvenementNewComponent {
       .filter((eq) => eq.id > 0);
   }
 
+  // Handles the normalizeUsers flow for the current screen.
+  private normalizeUsers(raw: unknown): UserDto[] {
+    return this.toList<Record<string, unknown>>(raw, 'users')
+      .filter((item): item is Record<string, unknown> => !!item && typeof item === 'object')
+      .map((item) => {
+        const id = Number(item['id'] ?? item['userId'] ?? item['idUser']);
+        const nom = String(item['nom'] ?? item['lastName'] ?? item['name'] ?? '').trim();
+        const prenom = String(item['prenom'] ?? item['firstName'] ?? '').trim();
+        const email = String(item['email'] ?? item['mail'] ?? '').trim();
+        const roleRaw = item['role'] ?? item['roles'];
+        const role = Array.isArray(roleRaw)
+          ? roleRaw.map((r) => String(r ?? '').trim()).filter(Boolean).join(', ')
+          : String(roleRaw ?? '').trim();
+        const matricule = Number(item['matricule'] ?? item['cin'] ?? item['cinNumber']);
+        const telephone = Number(item['telephone'] ?? item['tel'] ?? item['phone'] ?? item['mobile']);
+
+        return {
+          id: Number.isFinite(id) ? id : 0,
+          nom,
+          prenom,
+          email,
+          role,
+          matricule: Number.isFinite(matricule) ? matricule : 0,
+          telephone: Number.isFinite(telephone) ? telephone : 0
+        } as UserDto;
+      })
+      .filter((u) => u.id > 0 && (u.nom || u.prenom || u.email));
+  }
+
+  // Returns the requested data or derived value.
+  getEquipLabel(equipement: EquipAvailability): string {
+    const mapped = this.equipementNameById.get(equipement.id);
+    if (mapped) return mapped;
+
+    const fallback = String(equipement.typeEquipement ?? '').trim();
+    if (fallback) return fallback;
+
+    return equipement.id ? `Equipement #${equipement.id}` : 'Equipement';
+  }
+
+  // Handles the pickEquipementLabel flow for the current screen.
+  private pickEquipementLabel(item: Record<string, unknown>, id: number): string {
+    const mapped = this.equipementNameById.get(id);
+    if (mapped) return mapped;
+
+    const candidates = [
+      item['typeEquipement'],
+      item['nom'],
+      item['nomEquipement'],
+      item['designation'],
+      item['libelle'],
+      item['type'],
+      item['numeroSerie']
+    ];
+
+    for (const candidate of candidates) {
+      const value = String(candidate ?? '').trim();
+      if (value) return value;
+    }
+
+    return Number.isFinite(id) && id > 0 ? `Equipement #${id}` : 'Equipement';
+  }
+
+  // Loads or refreshes the related data from the backend.
+  private loadEquipementNames() {
+    this.equipementApi.getAll().subscribe({
+      next: (items) => {
+        const map = new Map<number, string>();
+        for (const item of items ?? []) {
+          const id = Number(item.id);
+          if (!Number.isFinite(id) || id <= 0) continue;
+
+          const label = String(item.nom ?? item.typeEquipement ?? item.numeroSerie ?? '').trim();
+          if (label) map.set(id, label);
+        }
+        this.equipementNameById = map;
+      },
+      error: (err) => console.log(err)
+    });
+  }
+
+  // Handles the toList flow for the current screen.
   private toList<T>(value: unknown, embeddedKey: string): T[] {
     if (Array.isArray(value)) return value as T[];
     if (!value || typeof value !== 'object') return [];
@@ -359,6 +459,7 @@ export class EmployeEvenementNewComponent {
     return [];
   }
 
+  // Handles the normalizeSalles flow for the current screen.
   private normalizeSalles(raw: unknown[]): SalleMini[] {
     return raw
       .filter((item): item is Record<string, unknown> => !!item && typeof item === 'object')
@@ -382,12 +483,14 @@ export class EmployeEvenementNewComponent {
       .filter((salle) => salle.id > 0 && salle.nom.length > 0);
   }
 
+  // Adds a new item after validating the input.
   private addDays(date: Date, days: number): Date {
     const next = new Date(date);
     next.setDate(next.getDate() + days);
     return next;
   }
 
+  // Handles the toDateInput flow for the current screen.
   private toDateInput(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -395,14 +498,16 @@ export class EmployeEvenementNewComponent {
     return `${year}-${month}-${day}`;
   }
 
+  // Handles the computeDateTime flow for the current screen.
   private computeDateTime(timeValue: string | null): Date | null {
     if (!this.selectedDate || !timeValue) return null;
     return new Date(`${this.selectedDate}T${timeValue}:00`);
   }
 
+  // Handles the toggleEquip flow for the current screen.
   toggleEquip(equipement: EquipAvailability, checked: boolean) {
     if (!equipement.available) {
-      this.equipementWarnMsg = `L'équipement ${equipement.typeEquipement} est déjà réservé sur ce créneau.`;
+      this.equipementWarnMsg = `L'équipement ${this.getEquipLabel(equipement)} est déjà réservé sur ce créneau.`;
       this.selectedEquipIds.delete(equipement.id);
       return;
     }
@@ -412,35 +517,42 @@ export class EmployeEvenementNewComponent {
     else this.selectedEquipIds.delete(equipement.id);
   }
 
+  // Loads the current user list and normalizes role values.
   loadUsers() {
     this.usersApi.getAll().subscribe({
-      next: (data) => { this.users = data ?? []; },
-      error: (err) => { console.log(err); }
+      next: (data) => {
+        this.users = this.normalizeUsers(data as unknown);
+      },
+      error: (err) => {
+        console.log(err);
+        this.users = [];
+      }
     });
   }
 
+  // Handles the filteredUsers flow for the current screen.
   get filteredUsers(): UserDto[] {
-    const q = (this.inviteSearch || '').toLowerCase().trim();
-    if (!q) return this.users ?? [];
-    return (this.users ?? []).filter(u =>
-      `${u.nom} ${u.prenom} ${u.email} ${u.role}`.toLowerCase().includes(q)
-    );
+    return this.users ?? [];
   }
 
+  // Handles the toggleInviteAll flow for the current screen.
   toggleInviteAll(checked: boolean) {
     this.inviteAll = checked;
     if (checked) this.selectedUserIds.clear();
   }
 
+  // Handles the toggleUser flow for the current screen.
   toggleUser(id: number) {
     if (this.selectedUserIds.has(id)) this.selectedUserIds.delete(id);
     else this.selectedUserIds.add(id);
   }
 
+  // Adds a new item after validating the input.
   addExternalPartner() {
     this.externalPartners = [...this.externalPartners, { nom: '', email: '' }];
   }
 
+  // Handles the removeExternalPartner flow for the current screen.
   removeExternalPartner(index: number) {
     this.externalPartners = this.externalPartners.filter((_, i) => i !== index);
     if (this.externalPartners.length === 0) {
@@ -484,6 +596,7 @@ export class EmployeEvenementNewComponent {
     return { ok: true, value: deduped };
   }
 
+  // Validates the form and sends it to the backend.
   submit() {
     if (this.form.invalid) return;
 

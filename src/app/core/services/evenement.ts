@@ -7,14 +7,17 @@ import { Evenement } from '../models/evenement';
 export class EvenementService {
   constructor(private http: HttpClient) {}
 
+  // Fetches all records for this API resource.
   getAll() {
     return this.http.get<Evenement[]>(`${environment.apiUrl}/Evenement/all`);
   }
 
+  // Adds a new item after validating the input.
   add(body: Evenement) {
     return this.http.post<Evenement>(`${environment.apiUrl}/Evenement/add`, body);
   }
 
+  // Updates the selected item and refreshes the local state.
   update(id: number, body: Evenement) {
     return this.http.put<Evenement>(`${environment.apiUrl}/Evenement/${id}`, body);
   }

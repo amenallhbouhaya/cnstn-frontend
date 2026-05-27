@@ -18,6 +18,7 @@ export interface AdminDashboardStats {
 export class AdminDashboardService {
   constructor(private http: HttpClient) {}
 
+  // Handles the stats flow for the current screen.
   stats() {
     return this.http.get<AdminDashboardStats>(`${environment.apiUrl}/api/admin/dashboard/stats`);
   }

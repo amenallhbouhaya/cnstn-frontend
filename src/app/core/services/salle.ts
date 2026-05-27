@@ -9,14 +9,17 @@ export class SalleService {
 
   constructor(private http: HttpClient) {}
 
+  // Fetches all records for this API resource.
   getAll() {
     return this.http.get<Salle[]>(this.baseUrl);
   }
 
+  // Adds a new item after validating the input.
   add(body: Salle) {
     return this.http.post<Salle>(this.baseUrl, body);
   }
 
+  // Updates the selected item and refreshes the local state.
   update(id: number, body: Salle) {
     return this.http.put<Salle>(`${this.baseUrl}/${id}`, body);
   }

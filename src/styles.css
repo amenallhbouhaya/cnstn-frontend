@@ -41,7 +41,69 @@
 
 html {
   height: 100%;
-  font-size: 18px;
+  @startuml
+  actor "Administrateur" as Admin
+  boundary "Interface" as UI
+  control "InterventionController" as Ctrl
+  control "InterventionService" as Svc
+  database "Base de données" as DB
+  
+  Admin -> UI : Ouvrir demande
+  UI -> Ctrl : Charger détails
+  Ctrl -> Svc : getById()
+  Svc -> DB : Lire demande
+  DB --> Svc : Détails
+  Svc --> Ctrl : Détails
+  Ctrl --> UI : Afficher détails
+  
+  Admin -> UI : Traiter demande
+  alt Marquer réparée
+    UI -> Ctrl : Marquer réparée
+    Ctrl -> Svc : repair(id)
+    Svc -> DB : Mettre statut REPARE
+    DB --> Svc : OK
+    Svc --> Ctrl : OK
+    Ctrl --> UI : Statut mis à jour
+  else Marquer cassée
+    UI -> Ctrl : Marquer cassée
+    Ctrl -> Svc : broken(id)
+    Svc -> DB : Mettre statut CASSE
+    DB --> Svc : OK
+    Svc --> Ctrl : OK
+    Ctrl --> UI : Statut mis à jour
+  end
+  @enduml  @startuml
+  actor "Administrateur" as Admin
+  boundary "Interface" as UI
+  control "InterventionController" as Ctrl
+  control "InterventionService" as Svc
+  database "Base de données" as DB
+  
+  Admin -> UI : Ouvrir demande
+  UI -> Ctrl : Charger détails
+  Ctrl -> Svc : getById()
+  Svc -> DB : Lire demande
+  DB --> Svc : Détails
+  Svc --> Ctrl : Détails
+  Ctrl --> UI : Afficher détails
+  
+  Admin -> UI : Traiter demande
+  alt Marquer réparée
+    UI -> Ctrl : Marquer réparée
+    Ctrl -> Svc : repair(id)
+    Svc -> DB : Mettre statut REPARE
+    DB --> Svc : OK
+    Svc --> Ctrl : OK
+    Ctrl --> UI : Statut mis à jour
+  else Marquer cassée
+    UI -> Ctrl : Marquer cassée
+    Ctrl -> Svc : broken(id)
+    Svc -> DB : Mettre statut CASSE
+    DB --> Svc : OK
+    Svc --> Ctrl : OK
+    Ctrl --> UI : Statut mis à jour
+  end
+  @enduml  font-size: 18px;
 }
 
 @media (max-width: 768px) {
@@ -628,19 +690,16 @@ app-admin-home {
 .card-equip::before    { background: var(--accent-green); }
 .card-users::before    { background: var(--accent-red); }
 .card-events::before   { background: #e67e22; }
-.card-services::before { background: #7c3aed; }
 
 .card-salles:hover   { border-color: rgba(27,42,107,.3); }
 .card-equip:hover    { border-color: rgba(46,125,50,.3); }
 .card-users:hover    { border-color: rgba(204,34,34,.3); }
 .card-events:hover   { border-color: rgba(230,126,34,.3); }
-.card-services:hover { border-color: rgba(124,58,237,.3); }
 
 .card-salles .card-icon   { background: rgba(27,42,107,.08); }
 .card-equip .card-icon    { background: rgba(46,125,50,.08); }
 .card-users .card-icon    { background: rgba(204,34,34,.08); }
 .card-events .card-icon   { background: rgba(230,126,34,.08); }
-.card-services .card-icon { background: rgba(124,58,237,.08); }
 
 /* ── Responsive sidebar ── */
 @media (max-width: 768px) {

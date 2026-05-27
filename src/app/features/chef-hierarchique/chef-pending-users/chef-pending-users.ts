@@ -19,10 +19,12 @@ export class ChefPendingUsersComponent implements OnInit {
   errorMsg = '';
   successMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit(): void {
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load(resetMessages: boolean = true) {
     this.loading = true;
     if (resetMessages) {
@@ -38,6 +40,7 @@ export class ChefPendingUsersComponent implements OnInit {
       });
   }
 
+  // Accepts the current item and refreshes the list.
   accept(id: number) {
     this.errorMsg = '';
     this.successMsg = '';
@@ -50,6 +53,7 @@ export class ChefPendingUsersComponent implements OnInit {
     });
   }
 
+  // Rejects the current item and refreshes the list.
   reject(id: number) {
     this.errorMsg = '';
     this.successMsg = '';

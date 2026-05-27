@@ -22,11 +22,9 @@ export interface InterventionDto {
   demandeurNom: string | null;
   demandeurPrenom: string | null;
   demandeurEmail: string;
-  serviceNom: string | null;
   equipementIds: number[];
   chefCommentaire: string | null;
   repairMode: string | null;
-  dsnObservation: string | null;
   dateReparation: string | null;
 }
 
@@ -34,40 +32,48 @@ export interface InterventionDto {
 export class InterventionApi {
   constructor(private http: HttpClient) {}
 
+  // Creates a new backend resource.
   create(body: CreateInterventionRequest) {
     return this.http.post(`${environment.apiUrl}/api/interventions`, body);
   }
 
+  // Fetches the current user items.
   my() {
     return this.http.get<InterventionDto[]>(`${environment.apiUrl}/api/interventions/me`);
   }
 
+  // Handles the pendingChef flow for the current screen.
   pendingChef() {
     return this.http.get<InterventionDto[]>(`${environment.apiUrl}/api/interventions/chef/pending`);
   }
 
+  // Handles the acceptChef flow for the current screen.
   acceptChef(id: number, commentaire?: string) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/chef/${id}/accept`, {
       commentaire: commentaire ?? ''
     });
   }
 
+  // Handles the rejectChef flow for the current screen.
   rejectChef(id: number, commentaire: string) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/chef/${id}/reject`, {
       commentaire
     });
   }
 
+  // Handles the pendingAdmin flow for the current screen.
   pendingAdmin() {
     return this.http.get<InterventionDto[]>(`${environment.apiUrl}/api/interventions/admin/pending`);
   }
 
+  // Handles the startAdmin flow for the current screen.
   startAdmin(id: number, repairMode: string) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/start`, {
       repairMode
     });
   }
 
+  // Handles the completeAdmin flow for the current screen.
   completeAdmin(id: number, observation: string, dateReparation: string) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/complete`, {
       observation,
@@ -75,31 +81,15 @@ export class InterventionApi {
     });
   }
 
+  // Handles the repairAdmin flow for the current screen.
   repairAdmin(id: number) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/repair`, {});
   }
 
+  // Handles the brokenAdmin flow for the current screen.
   brokenAdmin(id: number) {
     return this.http.post<InterventionDto>(`${environment.apiUrl}/api/interventions/admin/${id}/broken`, {});
   }
 
-  pendingDsn() {
-    return this.pendingAdmin();
-  }
-
-  startDsn(id: number, repairMode: string) {
-    return this.startAdmin(id, repairMode);
-  }
-
-  completeDsn(id: number, observation: string, dateReparation: string) {
-    return this.completeAdmin(id, observation, dateReparation);
-  }
-
-  repairDsn(id: number) {
-    return this.repairAdmin(id);
-  }
-
-  brokenDsn(id: number) {
-    return this.brokenAdmin(id);
-  }
+  
 }

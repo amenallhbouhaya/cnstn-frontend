@@ -25,10 +25,12 @@ export class AdminPostsComponent {
     imageUrl: ['', Validators.required]
   });
 
+  // Handles the items flow for the current screen.
   get items(): PublicPost[] {
     return this.postsStore.posts();
   }
 
+  // Handles the newItem flow for the current screen.
   newItem() {
     this.editingId = null;
     this.selectedImageName = '';
@@ -36,6 +38,7 @@ export class AdminPostsComponent {
     this.form.reset({ title: '', description: '', imageUrl: '' });
   }
 
+  // Handles the edit flow for the current screen.
   edit(item: PublicPost) {
     this.editingId = item.id;
     this.selectedImageName = 'Image actuelle';
@@ -47,6 +50,7 @@ export class AdminPostsComponent {
     });
   }
 
+  // Handles the related user interaction or event.
   onImageSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -79,6 +83,7 @@ export class AdminPostsComponent {
     reader.readAsDataURL(file);
   }
 
+  // Persists the current changes.
   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -100,6 +105,7 @@ export class AdminPostsComponent {
     this.newItem();
   }
 
+  // Handles the remove flow for the current screen.
   remove(id: number) {
     this.postsStore.remove(id);
     if (this.editingId === id) this.newItem();

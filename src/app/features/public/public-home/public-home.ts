@@ -61,10 +61,12 @@ export class PublicHomeComponent {
 		newPassword: ['', [Validators.required, Validators.minLength(6)]]
 	});
 
+	// Handles the news flow for the current screen.
 	get news(): PublicPost[] {
 		return this.postsStore.posts();
 	}
 
+	// Handles the openLoginModal flow for the current screen.
 	openLoginModal(): void {
 		this.showLoginModal = true;
 		this.modalMode = 'login';
@@ -75,6 +77,7 @@ export class PublicHomeComponent {
 		this.resetForgotPasswordState();
 	}
 
+	// Handles the openRegisterModal flow for the current screen.
 	openRegisterModal(): void {
 		this.showLoginModal = true;
 		this.modalMode = 'register';
@@ -85,6 +88,7 @@ export class PublicHomeComponent {
 		this.resetForgotPasswordState();
 	}
 
+	// Handles the closeLoginModal flow for the current screen.
 	closeLoginModal(): void {
 		this.showLoginModal = false;
 		this.modalMode = 'login';
@@ -95,12 +99,14 @@ export class PublicHomeComponent {
 		this.resetForgotPasswordState();
 	}
 
+	// Handles the switchToLogin flow for the current screen.
 	switchToLogin(): void {
 		this.modalMode = 'login';
 		this.errorMsg = '';
 		this.resetForgotPasswordState();
 	}
 
+	// Handles the switchToRegister flow for the current screen.
 	switchToRegister(): void {
 		this.modalMode = 'register';
 		this.registerErrorMsg = '';
@@ -109,6 +115,7 @@ export class PublicHomeComponent {
 		this.resetForgotPasswordState();
 	}
 
+	// Handles the switchToForgotPassword flow for the current screen.
 	switchToForgotPassword(): void {
 		this.modalMode = 'forgot-password';
 		this.errorMsg = '';
@@ -123,6 +130,7 @@ export class PublicHomeComponent {
 		}
 	}
 
+	// Handles the submitLogin flow for the current screen.
 	submitLogin(): void {
 		if (this.form.invalid) {
 			this.form.markAllAsTouched();
@@ -150,6 +158,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the submitRegister flow for the current screen.
 	submitRegister(): void {
 		if (this.awaitingEmailVerification) {
 			this.submitVerifyCode();
@@ -182,6 +191,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the submitVerifyCode flow for the current screen.
 	submitVerifyCode(): void {
 		this.verifyErrorMsg = '';
 		this.verifySuccessMsg = '';
@@ -211,6 +221,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the resendVerificationCode flow for the current screen.
 	resendVerificationCode(): void {
 		this.verifyErrorMsg = '';
 		this.verifySuccessMsg = '';
@@ -231,6 +242,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the requestPasswordResetCode flow for the current screen.
 	requestPasswordResetCode(): void {
 		if (this.forgotRequestForm.invalid) {
 			this.forgotRequestForm.markAllAsTouched();
@@ -254,6 +266,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the submitPasswordReset flow for the current screen.
 	submitPasswordReset(): void {
 		if (!this.awaitingPasswordResetCode) {
 			this.requestPasswordResetCode();
@@ -286,6 +299,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Handles the resendPasswordResetCode flow for the current screen.
 	resendPasswordResetCode(): void {
 		if (!this.passwordResetEmail) {
 			this.forgotErrorMsg = 'Email introuvable pour renvoi du code';
@@ -305,6 +319,7 @@ export class PublicHomeComponent {
 		});
 	}
 
+	// Clears the current form or component state.
 	private resetForgotPasswordState(): void {
 		this.awaitingPasswordResetCode = false;
 		this.passwordResetEmail = '';
@@ -314,6 +329,7 @@ export class PublicHomeComponent {
 		this.forgotResetForm.reset();
 	}
 
+	// Clears the current form or component state.
 	private resetVerificationState(): void {
 		this.awaitingEmailVerification = false;
 		this.verificationCode = '';

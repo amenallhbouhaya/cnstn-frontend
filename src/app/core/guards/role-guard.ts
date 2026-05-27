@@ -3,6 +3,7 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../services/auth';
 
+// Handles the roleGuard flow for the current screen.
 export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return true;
@@ -16,6 +17,7 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     (route.parent?.data?.['roles'] as string[] | undefined);
 
   const role = auth.role;
+  // Normalization باش نتفاداو فروقات spaces/char special في الroles.
   const normalize = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
   if (!auth.isLoggedIn()) return router.parseUrl('/');

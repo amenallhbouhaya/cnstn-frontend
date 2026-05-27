@@ -8,27 +8,6 @@
 			</div>
 		</a>
 
-		<nav class="docs-navbar" aria-label="Ressources qualite et certification">
-			<a class="docs-nav-link" href="/ressources/procedures-formulaires-organisatic.html" target="_blank" rel="noopener noreferrer">
-				Procedures et formulaires
-			</a>
-			<a class="docs-nav-link" href="/ressources/procedures-techniques.html" target="_blank" rel="noopener noreferrer">
-				Procedures techniques
-			</a>
-			<a class="docs-nav-link" href="/ressources/projet-certification-cnstn.html" target="_blank" rel="noopener noreferrer">
-				Projet certification
-			</a>
-			<a class="docs-nav-link" href="/ressources/manuel-qualite.html" target="_blank" rel="noopener noreferrer">
-				Manuel qualite
-			</a>
-			<a class="docs-nav-link" href="/ressources/politique-qualite.html" target="_blank" rel="noopener noreferrer">
-				Politique qualite
-			</a>
-			<a class="docs-nav-link" href="/ressources/missions-stages-realises.html" target="_blank" rel="noopener noreferrer">
-				المهمات و التربصات
-			</a>
-		</nav>
-
 		<button type="button" class="login-btn" (click)="openLoginModal()">Se Connecter</button>
 	</header>
 
@@ -111,7 +90,7 @@
 					<button type="button" class="switch-link" (click)="switchToForgotPassword()">Mot de passe oublie ?</button>
 				</div>
 
-				<button type="submit" class="submit-btn">Se connecter</button>
+				<button type="submit"  class="submit-btn">Se connecter</button>
 				<p class="login-error" *ngIf="errorMsg">{{ errorMsg }}</p>
 			</form>
 

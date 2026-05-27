@@ -30,11 +30,13 @@ export class AdminSallesComponent {
 
   private platformId = inject(PLATFORM_ID);
 
+// Initializes the component and loads its first data.
 ngOnInit() {
   if (!isPlatformBrowser(this.platformId)) return;
   this.load();
 }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.salleService.getAll().subscribe({
@@ -43,11 +45,9 @@ ngOnInit() {
     });
   }
 
-  newSalle() {
-    this.editingId = null;
-    this.form.reset({ nom: '', capacite: 1, description: '' });
-  }
 
+
+  // Handles the edit flow for the current screen.
   edit(s: Salle) {
     this.editingId = s.id ?? null;
     this.form.setValue({
@@ -57,13 +57,22 @@ ngOnInit() {
     });
   }
 
+  // Validates the form and sends it to the backend.
   submit() {
     if (this.form.invalid) return;
     const payload = this.form.value as Salle;
 
     if (this.editingId === null) {
       this.salleService.add(payload).subscribe({
-        next: () => { this.newSalle(); this.load(); },
+        next: () => {
+          this.editingId = null;
+          this.form.reset({
+            nom: '',
+            capacite: 1,
+            description: ''
+          });
+          this.load();
+        },
         error: () => this.errorMsg = 'Erreur ajout salle'
       });
     } else {
@@ -74,6 +83,7 @@ ngOnInit() {
     }
   }
 
+  // Handles the remove flow for the current screen.
   remove(id?: number) {
     if (!id) return;
     this.salleService.delete(id).subscribe({

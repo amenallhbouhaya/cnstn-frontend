@@ -20,10 +20,12 @@ export class AdminStockPanneComponent {
   errorMsg = '';
   successMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';
@@ -40,6 +42,7 @@ export class AdminStockPanneComponent {
       });
   }
 
+  // Restores the archived item to its active state.
   restore(item: StockEnPanneItem) {
     if (!item?.id || this.processingId !== null) return;
 

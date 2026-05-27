@@ -8,6 +8,7 @@ export class DirectionService {
 
   constructor(private http: HttpClient) {}
 
+  // Fetches all records for this API resource.
   getAll() {
     return this.http.get(this.baseUrl);
   }

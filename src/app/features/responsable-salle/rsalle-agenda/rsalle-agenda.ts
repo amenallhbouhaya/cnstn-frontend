@@ -19,11 +19,13 @@ export class RsalleAgendaComponent {
   loading = false;
   errorMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
     this.load();
   }
 
+  // Loads the current dataset from the backend.
   load() {
     this.loading = true;
     this.errorMsg = '';

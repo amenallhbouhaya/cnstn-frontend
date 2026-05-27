@@ -22,10 +22,12 @@ export class EmployeDocumentsComponent {
   loading = false;
   errorMsg = '';
 
+  // Initializes the component and loads its first data.
   ngOnInit() {
     this.load();
   }
 
+ // Loads the current dataset from the backend.
  load() {
   this.loading = true;
   this.errorMsg = '';
@@ -44,19 +46,23 @@ export class EmployeDocumentsComponent {
     });
 }
 
+    // Handles the newDocsCount flow for the current screen.
     get newDocsCount(): number {
       return this.newDocIds.size;
     }
 
+    // Handles the isNew flow for the current screen.
     isNew(docId: number): boolean {
       return this.newDocIds.has(docId);
     }
 
+    // Marks the item as processed or read.
     markAllAsRead() {
       this.saveSeenIds(this.items.map(d => d.id));
       this.newDocIds.clear();
     }
 
+  // Handles the download flow for the current screen.
   download(doc: DocumentItem) {
     this.api.download(doc.id).subscribe({
       next: (blob) => {
@@ -75,11 +81,13 @@ export class EmployeDocumentsComponent {
     });
   }
 
+  // Handles the computeNewDocs flow for the current screen.
   private computeNewDocs() {
     const seen = this.readSeenIds();
     this.newDocIds = new Set(this.items.filter(d => !seen.has(d.id)).map(d => d.id));
   }
 
+  // Marks the item as processed or read.
   private markAsRead(docId: number) {
     const seen = this.readSeenIds();
     seen.add(docId);
@@ -87,6 +95,7 @@ export class EmployeDocumentsComponent {
     this.newDocIds.delete(docId);
   }
 
+  // Handles the readSeenIds flow for the current screen.
   private readSeenIds(): Set<number> {
     if (!isPlatformBrowser(this.platformId)) return new Set<number>();
 
@@ -101,6 +110,7 @@ export class EmployeDocumentsComponent {
     }
   }
 
+  // Persists the current changes.
   private saveSeenIds(ids: number[]) {
     if (!isPlatformBrowser(this.platformId)) return;
     localStorage.setItem(this.seenKey, JSON.stringify(Array.from(new Set(ids))));
